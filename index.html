@@ -542,12 +542,20 @@ class Component extends DCLogic {
     try {
       const prompt = `Eres un acompañante espiritual católico, cálido y pastoral. La persona describe esta situación: "${situation}".
 Usa siempre la versión bíblica "Dios Habla Hoy" (DHH) para las citas.
-Dame EXACTAMENTE 3 opciones distintas de citas bíblicas para esta situación, cada una con su propia reflexión breve, para que la persona pueda evaluar varias.
-Responde ÚNICAMENTE en este formato, sin nada más, repetido 3 veces:
-OPCION
+Dame EXACTAMENTE 3 opciones distintas de citas bíblicas para esta situación (no dos, no una — las 3 completas), cada una con su propia reflexión breve, para que la persona pueda evaluar varias. Sé breve en cada reflexión para que las 3 opciones quepan completas.
+Responde ÚNICAMENTE en este formato exacto, sin nada más, y repite el bloque completo 3 veces:
+OPCION 1
 REFERENCIA: [libro capítulo:versículo]
-CITA: [la cita bíblica textual según la versión Dios Habla Hoy, máximo 25 palabras, SIN comillas envolviéndola]
-REFLEXION: [una reflexión pastoral cálida de 2 a 3 frases, con esperanza, fe católica y lenguaje sencillo; no des consejo médico, psicológico ni legal]
+CITA: [la cita bíblica textual según la versión Dios Habla Hoy, máximo 20 palabras, SIN comillas envolviéndola]
+REFLEXION: [una reflexión pastoral cálida de 1 a 2 frases, con esperanza, fe católica y lenguaje sencillo; no des consejo médico, psicológico ni legal]
+OPCION 2
+REFERENCIA: [...]
+CITA: [...]
+REFLEXION: [...]
+OPCION 3
+REFERENCIA: [...]
+CITA: [...]
+REFLEXION: [...]
 Si detectas cualquier señal de riesgo para la vida o integridad de la persona (ideas suicidas, autolesión, desesperanza extrema), responde exactamente y solo con la palabra: CRISIS_PROTOCOL`;
 
       const apiResponse = await fetch('/.netlify/functions/verse', {
@@ -564,7 +572,7 @@ Si detectas cualquier señal de riesgo para la vida o integridad de la persona (
         return;
       }
 
-      const blocks = text.split(/OPCION/i).map(b => b.trim()).filter(Boolean);
+      const blocks = text.split(/OPCION\s*\d*/i).map(b => b.trim()).filter(Boolean);
       const options = blocks.map(block => {
         const refMatch = block.match(/REFERENCIA:\s*(.+)/i);
         const citaMatch = block.match(/CITA:\s*(.+)/i);
