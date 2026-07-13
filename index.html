@@ -6,6 +6,22 @@
 <script src="./support.js"></script>
 </head>
 <body>
+<!-- Formularios ocultos para que Netlify Forms los detecte en el build.
+     No se muestran ni se usan directamente: los formularios reales están
+     dentro de la app y envían sus datos por fetch a estos mismos nombres. -->
+<form name="volunteer" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="nombre">
+  <input name="correo" type="email">
+  <input name="telefono">
+  <select name="interes"><option>Me interesa: Niños con cáncer</option></select>
+  <textarea name="mensaje"></textarea>
+</form>
+<form name="pickup" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="nombre">
+  <input name="telefono">
+  <select name="tipo_donacion"><option>Juguetes</option></select>
+  <textarea name="direccion"></textarea>
+</form>
 <x-dc>
 <helmet>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -165,7 +181,7 @@
             <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#C9D6DC;margin-bottom:.6em;display:inline-block;">Evangelio del día</span>
             <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#F1E2BB;">Lee la Palabra de hoy</h3>
             <p style="color:#D8E0E6;">Para mantener el evangelio siempre actualizado y fiel a la liturgia oficial, te conectamos directamente con la fuente de la Conferencia Episcopal.</p>
-            <a style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;text-decoration:none;background:#C79A3C;color:#2B2409;" href="https://www.vatican.va/news_services/liturgy/index_sp.htm" target="_blank" rel="noopener">Leer el evangelio de hoy ↗</a>
+            <a style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;text-decoration:none;background:#C79A3C;color:#2B2409;" href="https://www.vaticannews.va/es/evangelio-de-hoy.html" target="_blank" rel="noopener">Leer el evangelio de hoy ↗</a>
           </div>
 
           <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;margin-top:22px;">
@@ -233,22 +249,18 @@
           <input type="text" placeholder="O cuéntanos con tus palabras qué situación estás viviendo…" style="flex:1;padding:12px 16px;border-radius:999px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;" value="{{ freeText }}" onChange="{{ onFreeTextChange }}" onKeyDown="{{ onFreeTextKeyDown }}">
           <button style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#3B5747;color:#F8F4EA;white-space:nowrap;" onClick="{{ onFreeTextSubmit }}">Buscar una palabra para mí</button>
         </div>
+        <p style="font-size:.76rem;color:#585448;margin:8px 0 0 4px;">Por ejemplo: soledad, estrés en el trabajo, discusiones familiares, falta de propósito, ansiedad por dinero, dificultades para dormir…</p>
 
         <sc-if value="{{ verseIdle }}" hint-placeholder-val="{{ true }}"><span></span></sc-if>
-        <sc-if value="{{ verseLoading }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top:20px;background:#fff;border-radius:12px;padding:22px;border:1px solid rgba(43,42,36,0.12);">
-            <p style="font-size:.85rem;color:#585448;font-style:italic;margin:0;">Buscando una palabra para ti…</p>
-          </div>
-        </sc-if>
         <sc-if value="{{ verseResultShown }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top:20px;display:grid;gap:16px;">
-            <sc-for list="{{ verseOptions }}" as="opt" hint-placeholder-count="3">
-              <div style="background:#fff;border-radius:12px;padding:22px;border:1px solid rgba(43,42,36,0.12);animation:fadein .3s ease;">
-                <span style="font-weight:700;font-size:.82rem;color:#3B5747;text-transform:uppercase;letter-spacing:.04em;">{{ opt.ref }}</span>
-                <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-size:1.15rem;color:#2E4356;margin:10px 0 10px 0;">"{{ opt.cita }}"</blockquote>
-                <p style="margin:0;">{{ opt.reflexion }}</p>
-              </div>
-            </sc-for>
+          <div style="margin-top:20px;background:#fff;border-radius:12px;padding:22px;border:1px solid rgba(43,42,36,0.12);animation:fadein .3s ease;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <span style="font-weight:700;font-size:.82rem;color:#3B5747;text-transform:uppercase;letter-spacing:.04em;">{{ verseCurrent.ref }}</span>
+              <span style="font-size:.72rem;color:#585448;white-space:nowrap;">{{ versePos }}</span>
+            </div>
+            <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-size:1.15rem;color:#2E4356;margin:10px 0 10px 0;">"{{ verseCurrent.cita }}"</blockquote>
+            <p style="margin:0 0 16px 0;">{{ verseCurrent.reflexion }}</p>
+            <button style="background:#DCE6DE;border:none;border-radius:999px;padding:8px 16px;font-family:'Karla',sans-serif;font-weight:600;font-size:.8rem;color:#3B5747;cursor:pointer;" style-hover="background:#C79A3C; color:#2B2409;" onClick="{{ onNextVerse }}">Otra cita →</button>
           </div>
         </sc-if>
         <sc-if value="{{ verseCrisisShown }}" hint-placeholder-val="{{ false }}">
@@ -335,15 +347,15 @@
           <sc-if value="{{ donatePaneBienes }}" hint-placeholder-val="{{ false }}">
             <div>
               <p style="font-size:.85rem;">Déjanos tus datos y coordinamos la recolección de juguetes, comida o ropa en tu dirección.</p>
-              <form style="display:grid;gap:10px;margin-top:6px;" onSubmit="{{ onPickupSubmit }}">
-                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Nombre</label><input required style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;"></div>
-                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Teléfono</label><input required type="tel" style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;"></div>
+              <form name="pickup" style="display:grid;gap:10px;margin-top:6px;" onSubmit="{{ onPickupSubmit }}">
+                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Nombre</label><input name="nombre" required style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;"></div>
+                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Teléfono</label><input name="telefono" required type="tel" style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;"></div>
                 <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Tipo de donación</label>
-                  <select style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;">
+                  <select name="tipo_donacion" style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;">
                     <option>Juguetes</option><option>Comida</option><option>Ropa</option><option>Otro</option>
                   </select>
                 </div>
-                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Dirección de recogida</label><textarea required style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;resize:vertical;min-height:64px;"></textarea></div>
+                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Dirección de recogida</label><textarea name="direccion" required style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;resize:vertical;min-height:64px;"></textarea></div>
                 <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#C79A3C;color:#2B2409;">Solicitar recogida</button>
               </form>
               <sc-if value="{{ pickupSubmitted }}" hint-placeholder-val="{{ false }}">
@@ -395,18 +407,18 @@
         <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;">
           <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Voluntariado</h3>
           <p>Súmate como voluntario en visitas, campañas de donación o formación espiritual. No necesitas experiencia previa: solo el deseo de servir.</p>
-          <form style="display:grid;gap:12px;" onSubmit="{{ onVolunteerSubmit }}">
-            <input placeholder="Nombre completo" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
-            <input placeholder="Correo electrónico" type="email" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
-            <input placeholder="Teléfono / WhatsApp" type="tel" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
-            <select style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
+          <form name="volunteer" style="display:grid;gap:12px;" onSubmit="{{ onVolunteerSubmit }}">
+            <input name="nombre" placeholder="Nombre completo" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
+            <input name="correo" placeholder="Correo electrónico" type="email" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
+            <input name="telefono" placeholder="Teléfono / WhatsApp" type="tel" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
+            <select name="interes" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
               <option>Me interesa: Niños con cáncer</option>
               <option>Me interesa: Adultos mayores</option>
               <option>Me interesa: Donaciones y logística</option>
               <option>Me interesa: Formación espiritual</option>
               <option>Quiero unirme al servicio</option>
             </select>
-            <textarea placeholder="Cuéntanos brevemente por qué quieres unirte" rows="3" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;"></textarea>
+            <textarea name="mensaje" placeholder="Cuéntanos brevemente por qué quieres unirte" rows="3" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;"></textarea>
             <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#3B5747;color:#F8F4EA;">Quiero ser voluntario/a</button>
           </form>
           <sc-if value="{{ volunteerSubmitted }}" hint-placeholder-val="{{ false }}">
@@ -484,15 +496,150 @@ const CULTURE_FACTS = [
 ];
 
 const SITUATIONS = [
-  'Estoy triste y no sé cómo salir de la tristeza|Estoy triste',
-  'Siento miedo y ansiedad por el futuro|Siento miedo o ansiedad',
-  'Quiero saber cómo escoger bien a mi pareja según la fe|Escoger a mi pareja',
-  'Estoy luchando contra la tentación de ser infiel|Fidelidad',
-  'Quiero sentirme más cerca de Dios en mi vida diaria|Cercanía con Dios',
-  'Necesito fuerzas para perdonar a alguien que me hizo daño|Necesito perdonar',
-  'Estoy viviendo un duelo o una pérdida difícil|Duelo o pérdida',
-  'Quiero ser una mejor persona y crecer en virtud|Ser mejor persona'
+  'triste|Estoy triste',
+  'miedo|Siento miedo o ansiedad',
+  'pareja|Escoger a mi pareja',
+  'fidelidad|Fidelidad',
+  'cercania|Cercanía con Dios',
+  'perdon|Necesito perdonar',
+  'duelo|Duelo o pérdida',
+  'virtud|Ser mejor persona',
+  'enfermedad|Enfermedad terminal',
+  'depresion|Depresión',
+  'vicios|Evitar vicios',
+  'relacion|Fortalecer mi relación'
 ];
+
+const VERSE_LIBRARY = {
+  triste: [
+    { ref: 'Salmo 34:18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón; él salva a los que han perdido toda esperanza.', reflexion: 'Tu tristeza no pasa desapercibida para Dios: él está más cerca de ti justo en este momento.' },
+    { ref: 'Mateo 5:4 (DHH)', cita: 'Dichosos los que ahora lloran, porque Dios los consolará.', reflexion: 'El llanto no es debilidad; es el camino por el que Dios promete traer consuelo.' },
+    { ref: 'Salmo 30:5 (DHH)', cita: 'Si de noche hay llanto, de día hay alegría.', reflexion: 'La tristeza de hoy no es la última palabra — confía en que Dios trae nuevas mañanas.' },
+    { ref: 'Salmo 42:11 (DHH)', cita: '¿Por qué te entristeces, alma mía? Espera en Dios, porque volveré a alabarlo.', reflexion: 'Hablarle a tu propia alma con esperanza es también un acto de fe.' },
+    { ref: 'Juan 16:22 (DHH)', cita: 'Volveré a verlos, y su corazón se alegrará, y nadie les quitará esa alegría.', reflexion: 'La alegría que Dios promete no depende de las circunstancias — es una alegría que permanece.' }
+  ],
+  miedo: [
+    { ref: 'Isaías 41:10 (DHH)', cita: 'No temas, porque yo estoy contigo; yo te fortalezco y te ayudo.', reflexion: 'El miedo se enfrenta mejor sabiendo que no caminas sola/o: Dios va contigo.' },
+    { ref: 'Filipenses 4:6-7 (DHH)', cita: 'No se aflijan por nada; preséntenle a Dios sus peticiones, y la paz de Dios cuidará su corazón.', reflexion: 'Entregar la preocupación en oración abre espacio para que la paz de Dios entre.' },
+    { ref: '2 Timoteo 1:7 (DHH)', cita: 'Dios no nos ha dado un espíritu de cobardía, sino de poder, amor y dominio propio.', reflexion: 'El temor no define quién eres; Dios te ha dado fuerza para enfrentar lo que viene.' },
+    { ref: 'Salmo 27:1 (DHH)', cita: 'El Señor es mi luz y mi salvación; ¿a quién voy a tenerle miedo?', reflexion: 'Cuando Dios es tu punto de apoyo, el futuro deja de ser una amenaza.' },
+    { ref: 'Mateo 6:34 (DHH)', cita: 'No se angustien por el día de mañana, que el mañana traerá su propia angustia.', reflexion: 'Vivir un día a la vez, confiado en Dios, alivia el peso de lo que aún no llega.' }
+  ],
+  pareja: [
+    { ref: '1 Corintios 13:4-5 (DHH)', cita: 'El amor es paciente y bondadoso; no es egoísta ni se comporta con rudeza.', reflexion: 'Elegir bien empieza por reconocer este tipo de amor: paciente, humilde y generoso.' },
+    { ref: 'Filipenses 4:8 (DHH)', cita: 'Consideren bien todo lo verdadero, todo lo honesto, todo lo justo, todo lo puro.', reflexion: 'Al discernir una relación, mira si te acerca a lo que es verdadero, honesto y puro.' },
+    { ref: 'Proverbios 31:30 (DHH)', cita: 'Engañoso es el encanto y pasajera la belleza; la mujer que teme al Señor merece ser alabada.', reflexion: 'Más allá de la atracción, busca en la otra persona una fe y un carácter que perduren.' },
+    { ref: 'Eclesiastés 4:9-10 (DHH)', cita: 'Vale más estar acompañado que solo, pues si uno cae, el otro lo levanta.', reflexion: 'Busca a alguien que te ayude a levantarte, no solo a quien te acompañe en lo fácil.' },
+    { ref: '2 Corintios 6:14 (DHH)', cita: 'No formen yunta con los incrédulos, pues la luz y la oscuridad no tienen nada en común.', reflexion: 'Compartir la fe con tu pareja es una base que sostiene la relación en el tiempo.' }
+  ],
+  fidelidad: [
+    { ref: '1 Corintios 10:13 (DHH)', cita: 'Dios les ayudará a soportar la tentación, y les mostrará cómo pueden salir de ella.', reflexion: 'La tentación no te condena; Dios ya tiene preparada una salida si la buscas.' },
+    { ref: 'Mateo 26:41 (DHH)', cita: 'Vigilen y oren, para que no caigan en tentación.', reflexion: 'La oración y la vigilancia diaria son el escudo más firme contra la infidelidad.' },
+    { ref: 'Hebreos 13:4 (DHH)', cita: 'Que todos respeten el matrimonio y que los esposos se sean fieles.', reflexion: 'La fidelidad se protege cuidando pequeñas decisiones antes de que se vuelvan grandes.' },
+    { ref: 'Proverbios 4:23 (DHH)', cita: 'Cuida tu corazón más que ninguna otra cosa, porque de él mana la vida.', reflexion: 'Lo que permites entrar al corazón termina por definir tus decisiones — cuídalo primero.' },
+    { ref: 'Santiago 1:14-15 (DHH)', cita: 'Cada uno es tentado cuando se deja llevar por sus propios malos deseos.', reflexion: 'Reconocer a tiempo el primer paso hacia la tentación es la mejor forma de evitarla.' }
+  ],
+  cercania: [
+    { ref: 'Santiago 4:8 (DHH)', cita: 'Acérquense a Dios, y él se acercará a ustedes.', reflexion: 'Basta un paso sincero hacia Dios cada día para que la cercanía crezca.' },
+    { ref: 'Salmo 145:18 (DHH)', cita: 'El Señor está cerca de todos los que lo invocan de veras.', reflexion: 'No necesitas palabras perfectas: una oración honesta ya te acerca a Dios.' },
+    { ref: 'Jeremías 29:13 (DHH)', cita: 'Me buscarán, y me encontrarán, si me buscan de todo corazón.', reflexion: 'La cercanía con Dios es una búsqueda diaria, no un logro de un solo día.' },
+    { ref: 'Salmo 16:11 (DHH)', cita: 'Me has enseñado el camino de la vida; en tu presencia hay plenitud de alegría.', reflexion: 'La verdadera alegría se encuentra al hacer de la presencia de Dios un hábito diario.' },
+    { ref: 'Mateo 6:6 (DHH)', cita: 'Entra en tu cuarto, cierra la puerta y ora a tu Padre que está en secreto.', reflexion: 'Un espacio breve y silencioso al día puede transformar tu relación con Dios.' }
+  ],
+  perdon: [
+    { ref: 'Efesios 4:32 (DHH)', cita: 'Perdónense unos a otros, como Dios los perdonó a ustedes por medio de Cristo.', reflexion: 'Perdonar no borra el daño, pero libera tu corazón siguiendo el ejemplo de Dios.' },
+    { ref: 'Mateo 6:14 (DHH)', cita: 'Si perdonan a otros sus ofensas, también su Padre celestial los perdonará a ustedes.', reflexion: 'El perdón que das y el que recibes están unidos — pide fuerzas para dar el primer paso.' },
+    { ref: 'Colosenses 3:13 (DHH)', cita: 'Sopórtense y perdónense unos a otros, así como el Señor los perdonó.', reflexion: 'Perdonar es un proceso; puedes pedirle a Dios fuerzas cada vez que lo necesites.' },
+    { ref: 'Lucas 6:37 (DHH)', cita: 'Perdonen, y serán perdonados.', reflexion: 'Perdonar a otros abre en ti el mismo espacio de misericordia que necesitas recibir.' },
+    { ref: 'Salmo 103:12 (DHH)', cita: 'Tan lejos de nosotros echa nuestras rebeliones como lejos del oriente está el occidente.', reflexion: 'Si Dios perdona así, también puedes aprender a soltar lo que otros te hicieron.' }
+  ],
+  duelo: [
+    { ref: 'Salmo 34:18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón.', reflexion: 'En medio de la pérdida, no estás solo/a — Dios acompaña tu dolor.' },
+    { ref: 'Apocalipsis 21:4 (DHH)', cita: 'Dios secará las lágrimas de sus ojos, y ya no habrá muerte ni llanto.', reflexion: 'La esperanza cristiana no niega el dolor, pero promete que no será eterno.' },
+    { ref: 'Juan 11:25 (DHH)', cita: 'Jesús dijo: Yo soy la resurrección y la vida.', reflexion: 'Quien ha partido en la fe no está perdido para siempre — hay esperanza más allá del duelo.' },
+    { ref: '1 Tesalonicenses 4:13 (DHH)', cita: 'No quiero que estén tristes como los que no tienen esperanza.', reflexion: 'El duelo cristiano se vive con lágrimas reales, pero sostenidas por la esperanza.' },
+    { ref: 'Salmo 23:4 (DHH)', cita: 'Aunque pase por el valle más oscuro, no temeré, porque tú estás conmigo.', reflexion: 'Dios no evita el valle, pero promete atravesarlo contigo.' }
+  ],
+  virtud: [
+    { ref: 'Miqueas 6:8 (DHH)', cita: 'Lo que el Señor pide de ti: que hagas justicia, ames la misericordia y camines humildemente con tu Dios.', reflexion: 'Crecer en virtud es tan simple —y tan exigente— como vivir estas tres cosas cada día.' },
+    { ref: 'Filipenses 4:13 (DHH)', cita: 'Todo lo puedo en Cristo que me fortalece.', reflexion: 'El cambio verdadero no depende solo de tu esfuerzo, sino de la fuerza que Dios te da.' },
+    { ref: 'Gálatas 5:22-23 (DHH)', cita: 'El fruto del Espíritu es amor, alegría, paz, paciencia, bondad, fidelidad y dominio propio.', reflexion: 'Estas son las señales de que vas creciendo — no de golpe, sino como un fruto que madura.' },
+    { ref: 'Romanos 12:2 (DHH)', cita: 'No vivan según los criterios de este mundo; dejen que Dios los transforme.', reflexion: 'Crecer en virtud es dejar que Dios vaya renovando poco a poco tu manera de pensar.' },
+    { ref: 'Proverbios 4:18 (DHH)', cita: 'La senda de los justos es como la luz de la aurora, que va en aumento hasta el pleno día.', reflexion: 'El crecimiento espiritual es gradual — no te desanimes si el progreso es lento.' }
+  ],
+  enfermedad: [
+    { ref: 'Salmo 41:3 (DHH)', cita: 'El Señor lo sostendrá en el lecho del dolor y lo hará recobrar la salud.', reflexion: 'Aun en la enfermedad más difícil, Dios sostiene a quien sufre y no lo abandona.' },
+    { ref: 'Salmo 23:4 (DHH)', cita: 'Aunque pase por el valle más oscuro, no temeré, porque tú estás conmigo.', reflexion: 'El diagnóstico más duro no tiene la última palabra cuando Dios camina contigo.' },
+    { ref: '2 Corintios 12:9 (DHH)', cita: 'Te basta con mi amor; mi poder se muestra más cuando tú eres más débil.', reflexion: 'La debilidad del cuerpo puede ser el espacio donde la gracia de Dios se hace más visible.' },
+    { ref: 'Santiago 5:14-15 (DHH)', cita: 'Que llame a los ancianos de la iglesia para que oren por él.', reflexion: 'No enfrentes la enfermedad en soledad — la oración de otros también sostiene.' },
+    { ref: 'Apocalipsis 21:4 (DHH)', cita: 'Ya no habrá muerte, ni llanto, ni dolor, porque todo lo antiguo dejará de existir.', reflexion: 'La fe no elimina el sufrimiento presente, pero sostiene la esperanza de una vida sin él.' }
+  ],
+  depresion: [
+    { ref: 'Salmo 42:5 (DHH)', cita: '¿Por qué te deprimes, alma mía? Espera en Dios, porque volveré a alabarlo.', reflexion: 'Hablarle a tu propia alma con esperanza, aunque no lo sientas todavía, es un acto de fe.' },
+    { ref: 'Salmo 34:18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón.', reflexion: 'La oscuridad que sientes no aleja a Dios de ti — él permanece cerca en el silencio.' },
+    { ref: 'Isaías 61:3 (DHH)', cita: 'Les dará alegría en lugar de luto, y cantos de alabanza en lugar de tristeza.', reflexion: 'Dios promete un cambio real, aunque hoy parezca lejano — sigue dando pasos pequeños.' },
+    { ref: '1 Pedro 5:7 (DHH)', cita: 'Pongan en las manos de Dios todas sus preocupaciones, porque él tiene cuidado de ustedes.', reflexion: 'No tienes que cargar solo/a este peso — Dios y las personas de confianza pueden sostenerlo contigo.' },
+    { ref: 'Mateo 11:28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'El descanso que ofrece Jesús no reemplaza la ayuda profesional, pero acompaña el proceso.' }
+  ],
+  vicios: [
+    { ref: '1 Corintios 6:12 (DHH)', cita: 'Todo me está permitido, pero no todo me conviene; no dejaré que nada me domine.', reflexion: 'La libertad verdadera no es hacer lo que se quiere, sino no estar esclavizado por nada.' },
+    { ref: '1 Corintios 10:13 (DHH)', cita: 'Dios les ayudará a soportar la tentación, y les mostrará cómo pueden salir de ella.', reflexion: 'Cada vez que sientas la tentación, recuerda que Dios ya tiene preparada una salida.' },
+    { ref: 'Gálatas 5:1 (DHH)', cita: 'Cristo nos hizo libres; manténganse, pues, firmes y no se sometan de nuevo a la esclavitud.', reflexion: 'Cada recaída no borra el camino recorrido — vuelve a levantarte hacia la libertad.' },
+    { ref: 'Romanos 12:2 (DHH)', cita: 'No vivan según los criterios de este mundo; dejen que Dios los transforme, renovando su mente.', reflexion: 'Cambiar un hábito empieza por cambiar lo que alimenta la mente cada día.' },
+    { ref: 'Filipenses 4:13 (DHH)', cita: 'Todo lo puedo en Cristo que me fortalece.', reflexion: 'Dejar un vicio no depende solo de tu voluntad — pide la fuerza de Dios cada día, un día a la vez.' }
+  ],
+  relacion: [
+    { ref: '1 Corintios 13:4-7 (DHH)', cita: 'El amor es paciente, es bondadoso, no guarda rencor y todo lo soporta.', reflexion: 'Fortalecer una relación es practicar este amor concreto, día a día, en lo pequeño.' },
+    { ref: 'Colosenses 3:13-14 (DHH)', cita: 'Sopórtense y perdónense unos a otros; por encima de todo, vístanse de amor.', reflexion: 'Toda relación duradera necesita paciencia y disposición a perdonar una y otra vez.' },
+    { ref: 'Eclesiastés 4:9-12 (DHH)', cita: 'Dos que están juntos pueden calentarse; uno solo, ¿cómo va a calentarse?', reflexion: 'Cuidar la cercanía y el tiempo compartido sostiene lo que la rutina desgasta.' },
+    { ref: 'Efesios 4:2-3 (DHH)', cita: 'Sopórtense unos a otros con amor, esforzándose por mantener la unidad.', reflexion: 'La unidad no es ausencia de conflicto, sino el esfuerzo constante por seguir juntos.' },
+    { ref: 'Filipenses 2:3-4 (DHH)', cita: 'No hagan nada por rivalidad; que cada uno mire por los intereses de los demás.', reflexion: 'Poner al otro primero, aunque cueste, es lo que hace crecer una relación con el tiempo.' }
+  ],
+  general: [
+    { ref: 'Salmo 46:1 (DHH)', cita: 'Dios es nuestro refugio y nuestra fortaleza; nuestra ayuda segura en momentos de angustia.', reflexion: 'Sea lo que sea que estés viviendo, Dios sigue siendo tu refugio seguro.' },
+    { ref: 'Romanos 8:28 (DHH)', cita: 'Dios hace que todas las cosas ayuden para bien a los que lo aman.', reflexion: 'Aun en lo que no entiendes, puedes confiar en que Dios sigue trabajando por tu bien.' },
+    { ref: 'Josué 1:9 (DHH)', cita: 'No temas ni desmayes, porque el Señor tu Dios estará contigo en todo lo que hagas.', reflexion: 'No importa la situación que enfrentes hoy: no la enfrentas sola/o.' },
+    { ref: 'Salmo 55:22 (DHH)', cita: 'Pon tus cargas en las manos del Señor, y él te sustentará.', reflexion: 'No fuiste hecho/a para cargar solo/a lo que hoy te pesa.' },
+    { ref: 'Mateo 11:28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'Cualquiera que sea tu cansancio hoy, hay una invitación abierta a encontrar descanso en Dios.' }
+  ],
+  soledad: [
+    { ref: 'Salmo 68:6 (DHH)', cita: 'Dios da un hogar a los desamparados.', reflexion: 'Aun cuando sientas que nadie te acompaña, Dios te ofrece un lugar de pertenencia.' },
+    { ref: 'Deuteronomio 31:6 (DHH)', cita: 'El Señor tu Dios va contigo; no te dejará ni te abandonará.', reflexion: 'La soledad que sientes no es la verdad final: Dios permanece contigo aunque no lo veas.' },
+    { ref: 'Hebreos 13:5 (DHH)', cita: 'Nunca los dejaré ni los abandonaré.', reflexion: 'Esta promesa es para hoy, no solo para los momentos fáciles.' }
+  ],
+  trabajo: [
+    { ref: 'Colosenses 3:23 (DHH)', cita: 'Todo lo que hagan, háganlo de buena gana, como si estuvieran sirviendo al Señor.', reflexion: 'Ofrecer tu trabajo a Dios cambia el sentido del esfuerzo diario, aun en medio del estrés.' },
+    { ref: 'Filipenses 4:6 (DHH)', cita: 'No se aflijan por nada; preséntenle a Dios sus peticiones con acción de gracias.', reflexion: 'La incertidumbre laboral se lleva mejor cuando se comparte con Dios en oración.' },
+    { ref: 'Salmo 90:17 (DHH)', cita: 'Haz prosperar la obra de nuestras manos.', reflexion: 'Puedes pedirle a Dios que acompañe tu esfuerzo, no solo el resultado final.' }
+  ],
+  familia: [
+    { ref: 'Romanos 12:18 (DHH)', cita: 'Estén en paz con todos, en cuanto dependa de ustedes.', reflexion: 'No siempre está en tus manos evitar el conflicto, pero sí buscar la paz de tu parte.' },
+    { ref: 'Efesios 4:26 (DHH)', cita: 'Si se enojan, no pequen; no dejen que el enojo les dure hasta la puesta del sol.', reflexion: 'Las discusiones familiares duelen menos cuando no se dejan crecer con el tiempo.' },
+    { ref: 'Colosenses 3:13 (DHH)', cita: 'Sopórtense y perdónense unos a otros, así como el Señor los perdonó.', reflexion: 'La familia se sostiene con paciencia diaria, no con la ausencia de diferencias.' }
+  ],
+  proposito: [
+    { ref: 'Jeremías 29:11 (DHH)', cita: 'Yo sé los planes que tengo para ustedes, planes para su bienestar y no para su mal.', reflexion: 'Aun cuando no lo veas claro, Dios tiene un propósito para tu vida.' },
+    { ref: 'Efesios 2:10 (DHH)', cita: 'Somos hechura de Dios, creados para hacer buenas obras.', reflexion: 'Tu vida tiene un sentido que va más allá de lo que hoy alcanzas a ver.' },
+    { ref: 'Salmo 139:14 (DHH)', cita: 'Te alabo porque soy una creación admirable.', reflexion: 'El propósito comienza por reconocer que tu vida misma tiene valor a los ojos de Dios.' }
+  ],
+  finanzas: [
+    { ref: 'Filipenses 4:19 (DHH)', cita: 'Mi Dios les proveerá todo lo que necesiten.', reflexion: 'La preocupación por el dinero puede entregarse en oración, sin dejar de actuar con responsabilidad.' },
+    { ref: 'Mateo 6:33 (DHH)', cita: 'Busquen primero el reino de Dios, y todo lo demás se les dará por añadidura.', reflexion: 'Ordenar las prioridades no resuelve una deuda, pero sí devuelve paz para enfrentarla.' },
+    { ref: 'Salmo 37:25 (DHH)', cita: 'Nunca he visto a los justos abandonados por el Señor.', reflexion: 'En tiempos de escasez, la fe no promete riqueza, pero sí que no estarás abandonado/a.' }
+  ],
+  sueno: [
+    { ref: 'Salmo 4:8 (DHH)', cita: 'En paz me acuesto y en paz me duermo, porque solo tú, Señor, me haces vivir seguro.', reflexion: 'Entregar las preocupaciones antes de dormir puede traer una calma que el cansancio no da.' },
+    { ref: 'Proverbios 3:24 (DHH)', cita: 'Cuando te acuestes, no tendrás temor, y descansarás con un sueño agradable.', reflexion: 'Confiar en Dios por la noche es una forma de soltar lo que no puedes resolver hoy.' },
+    { ref: 'Mateo 11:28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'El descanso que ofrece Jesús es también para las noches en que el cuerpo no logra descansar.' }
+  ],
+  autoestima: [
+    { ref: 'Salmo 139:14 (DHH)', cita: 'Te alabo porque soy una creación admirable; ¡tus obras son maravillosas!', reflexion: 'Antes de que alguien opinara sobre ti, Dios ya te había mirado como una obra admirable.' },
+    { ref: 'Génesis 1:27 (DHH)', cita: 'Dios creó al ser humano a su imagen; hombre y mujer los creó.', reflexion: 'Tu valor no depende de un espejo ni de una comparación — viene de haber sido creado/a a imagen de Dios.' },
+    { ref: '1 Samuel 16:7 (DHH)', cita: 'El Señor no se fija en lo que se fija el hombre... el Señor se fija en el corazón.', reflexion: 'Lo que más importa de ti no es lo que se ve por fuera, sino lo que Dios ve en tu interior.' },
+    { ref: 'Isaías 43:4 (DHH)', cita: 'Tú eres de gran valor ante mis ojos, y te doy honra, y te amo.', reflexion: 'Ese "me siento feo/a" que sientes hoy no es lo que Dios ve cuando te mira.' },
+    { ref: 'Efesios 2:10 (DHH)', cita: 'Somos hechura de Dios, creados en Cristo Jesús para hacer buenas obras.', reflexion: 'Fuiste hecho/a con un propósito, no como un error ni una casualidad.' }
+  ]
+};
 
 class Component extends DCLogic {
   state = {
@@ -506,9 +653,9 @@ class Component extends DCLogic {
     cultureFactIndex: 0,
     faithCapsuleIndex: 0,
     jesusLifeIndex: 0,
-    selectedSituation: null, // situation string or '__CRISIS__'
-    verseStatus: 'idle', // idle | loading | result | crisis
-    verseOptions: []
+    selectedSituation: null, // situation key or '__CRISIS__'
+    verseStatus: 'idle', // idle | result | crisis
+    verseIndex: 0
   };
 
   componentDidMount() {
@@ -527,78 +674,67 @@ class Component extends DCLogic {
     return CRISIS_KEYWORDS.some(k => t.includes(k));
   }
 
+  submitToNetlify(e, formName, stateFlag) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    data.append('form-name', formName);
+    fetch('/', { method: 'POST', body: new URLSearchParams(data).toString(), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+      .catch(() => {})
+      .finally(() => { this.setState({ [stateFlag]: true }); form.reset(); });
+  }
+
   setTab(name) {
     this.setState({ activeTab: name, navOpen: false });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  async requestVerse(situation) {
-    this.setState({ selectedSituation: situation });
-    if (situation === '__CRISIS__' || this.isCrisisText(situation)) {
-      this.setState({ verseStatus: 'crisis' });
+  matchSituationKey(text) {
+    const t = text.toLowerCase();
+    const rules = [
+      ['triste', ['triste', 'tristeza', 'deprimid', 'desanim']],
+      ['miedo', ['miedo', 'ansi', 'angustia', 'preocup', 'nervios']],
+      ['pareja', ['pareja', 'novio', 'novia', 'enamor', 'casarme']],
+      ['fidelidad', ['infiel', 'fidelidad', 'tentacion', 'tentación', 'engañ']],
+      ['cercania', ['cerca de dios', 'cercania', 'cercanía', 'oracion', 'oración', 'espiritual']],
+      ['perdon', ['perdon', 'perdón', 'rencor', 'daño', 'ofendi']],
+      ['duelo', ['duelo', 'perdida', 'pérdida', 'murio', 'murió', 'falleci']],
+      ['virtud', ['virtud', 'mejor persona', 'crecer', 'cambiar']],
+      ['enfermedad', ['enfermedad', 'terminal', 'cancer', 'cáncer', 'diagnostico', 'diagnóstico']],
+      ['depresion', ['depresion', 'depresión', 'deprimid', 'no tengo ganas', 'vacio', 'vacío']],
+      ['vicios', ['vicio', 'adiccion', 'adicción', 'alcohol', 'droga', 'fumar', 'apuestas']],
+      ['relacion', ['fortalecer', 'mi relacion', 'mi relación', 'mi matrimonio', 'mi noviazgo']],
+      ['soledad', ['soledad', 'solo', 'sola', 'nadie me', 'aislad']],
+      ['trabajo', ['estres', 'estrés', 'trabajo', 'jefe', 'laboral', 'desempleo', 'sin empleo']],
+      ['familia', ['discusion', 'discusión', 'familia', 'pelea', 'conflicto familiar', 'papa', 'papá', 'mama', 'mamá', 'hijos']],
+      ['proposito', ['proposito', 'propósito', 'sentido de mi vida', 'para que vivo', 'para qué vivo']],
+      ['finanzas', ['dinero', 'deuda', 'deudas', 'finanzas', 'no me alcanza', 'economico', 'económico']],
+      ['sueno', ['dormir', 'insomnio', 'no puedo dormir', 'sueño']],
+      ['autoestima', ['autoestima', 'me siento feo', 'me siento fea', 'no me quiero', 'no me gusto', 'no valgo', 'inseguridad', 'inseguro', 'insegura']]
+    ];
+    for (const [key, words] of rules) {
+      if (words.some(w => t.includes(w))) return key;
+    }
+    return 'general';
+  }
+
+  selectVerse(situationKey) {
+    this.setState({ selectedSituation: situationKey, verseStatus: 'result', verseIndex: 0 });
+  }
+
+  requestVerse(situationOrText) {
+    if (situationOrText === '__CRISIS__' || this.isCrisisText(situationOrText)) {
+      this.setState({ selectedSituation: '__CRISIS__', verseStatus: 'crisis' });
       return;
     }
-    this.setState({ verseStatus: 'loading' });
-    try {
-      const prompt = `Eres un acompañante espiritual católico, cálido y pastoral. La persona describe esta situación: "${situation}".
-Usa siempre la versión bíblica "Dios Habla Hoy" (DHH) para las citas.
-Dame EXACTAMENTE 3 opciones distintas de citas bíblicas para esta situación (no dos, no una — las 3 completas), cada una con su propia reflexión breve, para que la persona pueda evaluar varias. Sé breve en cada reflexión para que las 3 opciones quepan completas.
-Responde ÚNICAMENTE en este formato exacto, sin nada más, y repite el bloque completo 3 veces:
-OPCION 1
-REFERENCIA: [libro capítulo:versículo]
-CITA: [la cita bíblica textual según la versión Dios Habla Hoy, máximo 20 palabras, SIN comillas envolviéndola]
-REFLEXION: [una reflexión pastoral cálida de 1 a 2 frases, con esperanza, fe católica y lenguaje sencillo; no des consejo médico, psicológico ni legal]
-OPCION 2
-REFERENCIA: [...]
-CITA: [...]
-REFLEXION: [...]
-OPCION 3
-REFERENCIA: [...]
-CITA: [...]
-REFLEXION: [...]
-Si detectas cualquier señal de riesgo para la vida o integridad de la persona (ideas suicidas, autolesión, desesperanza extrema), responde exactamente y solo con la palabra: CRISIS_PROTOCOL`;
+    const key = VERSE_LIBRARY[situationOrText] ? situationOrText : this.matchSituationKey(situationOrText);
+    this.selectVerse(key);
+  }
 
-      const apiResponse = await fetch('/.netlify/functions/verse', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
-      });
-      const data = await apiResponse.json();
-      if (!apiResponse.ok) throw new Error(data.error || 'Error de servidor');
-      const text = data.text;
-
-      if (text.includes('CRISIS_PROTOCOL') || this.isCrisisText(text)) {
-        this.setState({ verseStatus: 'crisis' });
-        return;
-      }
-
-      const blocks = text.split(/OPCION\s*\d*/i).map(b => b.trim()).filter(Boolean);
-      const options = blocks.map(block => {
-        const refMatch = block.match(/REFERENCIA:\s*(.+)/i);
-        const citaMatch = block.match(/CITA:\s*(.+)/i);
-        const reflexionMatch = block.match(/REFLEXION:\s*([\s\S]+)/i);
-        const stripQuotes = (t) => t.replace(/^["'“”‘’]+|["'“”‘’]+$/g, '').trim();
-        return {
-          ref: refMatch ? refMatch[1].trim() : 'Palabra para ti',
-          cita: citaMatch ? stripQuotes(citaMatch[1].trim()) : block,
-          reflexion: reflexionMatch ? reflexionMatch[1].trim() : ''
-        };
-      }).filter(o => o.cita);
-
-      this.setState({
-        verseStatus: 'result',
-        verseOptions: options.length ? options : [{ ref: 'Palabra para ti', cita: text, reflexion: '' }]
-      });
-    } catch (err) {
-      this.setState({
-        verseStatus: 'result',
-        verseOptions: [{
-          ref: 'Salmo 46:1 (DHH)',
-          cita: 'Dios es nuestro refugio y nuestra fortaleza; nuestra ayuda segura en momentos de angustia.',
-          reflexion: 'No pudimos conectar con el acompañante espiritual en este momento — esta palabra te acompaña mientras tanto.'
-        }]
-      });
-    }
+  nextVerse() {
+    const key = this.state.selectedSituation;
+    const list = VERSE_LIBRARY[key] || VERSE_LIBRARY.general;
+    this.setState({ verseIndex: (this.state.verseIndex + 1) % list.length });
   }
 
   renderVals() {
@@ -642,6 +778,8 @@ Si detectas cualquier señal de riesgo para la vida o integridad de la persona (
       };
     });
     const crisisSelected = s.selectedSituation === '__CRISIS__';
+    const currentList = VERSE_LIBRARY[s.selectedSituation] || VERSE_LIBRARY.general;
+    const currentVerse = currentList[s.verseIndex] || currentList[0];
 
     return {
       isMobile,
@@ -677,10 +815,11 @@ Si detectas cualquier señal de riesgo para la vida o integridad de la persona (
       onFreeTextSubmit: () => { if (s.freeText.trim()) this.requestVerse(s.freeText.trim()); },
 
       verseIdle: s.verseStatus === 'idle',
-      verseLoading: s.verseStatus === 'loading',
       verseResultShown: s.verseStatus === 'result',
       verseCrisisShown: s.verseStatus === 'crisis',
-      verseOptions: s.verseOptions,
+      verseCurrent: currentVerse,
+      versePos: currentList.length > 1 ? ((s.verseIndex + 1) + ' / ' + currentList.length) : '',
+      onNextVerse: () => this.nextVerse(),
 
       cultureFact: CULTURE_FACTS[s.cultureFactIndex],
       cultureFactCount: CULTURE_FACTS.length,
@@ -703,9 +842,9 @@ Si detectas cualquier señal de riesgo para la vida o integridad de la persona (
       onDonateBienes: () => this.setState({ donatePane: 'bienes' }),
 
       pickupSubmitted: s.pickupSubmitted,
-      onPickupSubmit: (e) => { e.preventDefault(); this.setState({ pickupSubmitted: true }); e.target.reset(); },
+      onPickupSubmit: (e) => this.submitToNetlify(e, 'pickup', 'pickupSubmitted'),
       volunteerSubmitted: s.volunteerSubmitted,
-      onVolunteerSubmit: (e) => { e.preventDefault(); this.setState({ volunteerSubmitted: true }); e.target.reset(); }
+      onVolunteerSubmit: (e) => this.submitToNetlify(e, 'volunteer', 'volunteerSubmitted')
     };
   }
 }
