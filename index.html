@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{margin:0;}
+    h1,h2,h3,h4{margin:0 0 .4em 0; letter-spacing:-0.01em;}
+    p{margin:0 0 1em 0;}
+    img{max-width:100%;display:block;}
+    :focus-visible{outline:3px solid #C79A3C; outline-offset:2px;}
+    @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+    @keyframes draw{to{stroke-dashoffset:0;}}
+    @media (prefers-reduced-motion:reduce){
+      .route-path{animation:none !important; stroke-dashoffset:0 !important;}
+    }
+  </style>
+</helmet>
+
+<div style="background:#F8F4EA;color:#2B2A24;font-family:'Karla',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;">
+
+  <!-- ============ HEADER ============ -->
+  <header style="position:sticky;top:0;z-index:100;background:rgba(248,244,234,0.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(43,42,36,0.12);">
+    <div style="max-width:1120px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;">
+      <a href="#" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onClick="{{ onBrandClick }}">
+        <svg viewBox="0 0 40 40" fill="none" width="34" height="34" style="flex-shrink:0;">
+          <circle cx="20" cy="20" r="19" fill="#DCE6DE" stroke="#5C7A66"></circle>
+          <path d="M20 9v22M13 16h14" stroke="#3B5747" stroke-width="2.2" stroke-linecap="round"></path>
+          <path d="M9 27c4-3 8-3 11 0s7 3 11 0" stroke="#C79A3C" stroke-width="1.6" fill="none" stroke-linecap="round"></path>
+        </svg>
+        <span style="font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;color:#2E4356;line-height:1.1;">Un Nuevo Camino</span>
+      </a>
+
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button aria-label="Abrir menú" style="background:none;border:1px solid rgba(43,42,36,0.12);border-radius:10px;padding:8px 10px;cursor:pointer;" onClick="{{ toggleNav }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2E4356" stroke-width="2" width="20" height="20"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+        </button>
+      </sc-if>
+
+      <nav style="{{ navWrapStyle }}">
+        <ul style="list-style:none;display:flex;align-items:center;gap:0;margin:0;padding:0;position:relative;flex-direction:{{ navDirection }};">
+          <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="5">
+            <li style="position:relative;z-index:1;{{ item.liStyle }}">
+              <button role="tab" aria-selected="{{ item.selected }}" style="{{ item.btnStyle }}" onClick="{{ item.onClick }}">
+                <span style="{{ item.dotStyle }}"></span>{{ item.label }}
+              </button>
+            </li>
+          </sc-for>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main style="max-width:1120px;margin:0 auto;padding:0 28px;">
+
+    <!-- ============ TAB: INICIO ============ -->
+    <sc-if value="{{ tabInicio }}" hint-placeholder-val="{{ true }}">
+    <section style="animation:fadein .4s ease;">
+      <div style="position:relative;overflow:hidden;background:linear-gradient(180deg, #DCE6DE 0%, #F8F4EA 65%);padding:64px 0 40px;margin:0 -28px;">
+        <div style="max-width:1120px;margin:0 auto;padding:0 28px;position:relative;z-index:2;">
+          <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Fe · Esperanza · Servicio</span>
+          <h1 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:clamp(2.1rem,4.6vw,3.4rem);max-width:14ch;line-height:1.08;">Un camino de esperanza, iluminado por la fe.</h1>
+          <p style="font-size:1.1rem;max-width:52ch;color:#585448;">Somos un movimiento católico que lleva esperanza a niños con cáncer, adultos mayores y familias de bajos recursos, inspirados en el amor de Dios y llamados a caminar junto a quien más lo necesita.</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
+            <button style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#C79A3C;color:#2B2409;transition:transform .15s ease, box-shadow .15s ease;" style-hover="box-shadow:0 8px 20px rgba(199,154,60,.32); transform:translateY(-1px);" onClick="{{ goFe }}">Formación espiritual</button>
+            <button style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;background:transparent;border:1px solid #2E4356;color:#2E4356;transition:transform .15s ease, box-shadow .15s ease;" style-hover="background:#2E4356; color:#F8F4EA;" onClick="{{ goActividades }}">Quiero donar</button>
+          </div>
+          <svg viewBox="0 0 1000 140" preserveAspectRatio="none" aria-hidden="true" style="width:100%;height:auto;display:block;margin-top:36px;">
+            <path class="route-path" d="M10 110 C 200 20, 320 180, 500 90 S 780 10, 990 70" style="fill:none;stroke:#5C7A66;stroke-width:2;stroke-dasharray:6 8;stroke-linecap:round;stroke-dashoffset:1000;animation:draw 2.4s ease forwards .3s;"></path>
+            <circle cx="10" cy="110" r="6" fill="#C79A3C" stroke="#F8F4EA" stroke-width="3"></circle>
+            <circle cx="330" cy="90" r="6" fill="#C79A3C" stroke="#F8F4EA" stroke-width="3"></circle>
+            <circle cx="620" cy="60" r="6" fill="#C79A3C" stroke="#F8F4EA" stroke-width="3"></circle>
+            <circle cx="990" cy="70" r="6" fill="#C79A3C" stroke="#F8F4EA" stroke-width="3"></circle>
+            <text x="0" y="128" style="font-family:'Karla',sans-serif;font-size:11px;font-weight:700;fill:#2E4356;letter-spacing:.04em;">FE</text>
+            <text x="300" y="72" style="font-family:'Karla',sans-serif;font-size:11px;font-weight:700;fill:#2E4356;letter-spacing:.04em;">ESPERANZA</text>
+            <text x="600" y="42" style="font-family:'Karla',sans-serif;font-size:11px;font-weight:700;fill:#2E4356;letter-spacing:.04em;">AMOR</text>
+            <text x="930" y="52" style="font-family:'Karla',sans-serif;font-size:11px;font-weight:700;fill:#2E4356;letter-spacing:.04em;">SERVICIO</text>
+          </svg>
+        </div>
+      </div>
+
+      <section style="padding:56px 0;">
+        <div style="max-width:60ch;margin-bottom:34px;">
+          <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Quiénes somos</span>
+          <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Nacimos para acompañar, no solo para ayudar.</h2>
+        </div>
+        <div style="display:grid;gap:22px;grid-template-columns:{{ grid2Cols }};align-items:start;">
+          <div>
+            <p>Un Nuevo Camino es un movimiento católico sin ánimo de lucro. Creemos que cada persona —un niño enfrentando el cáncer, un adulto mayor que vive en soledad, una familia que no llega a fin de mes— merece sentir que no camina sola, y que ese acompañamiento nace de la fe en un Dios que nos llama a servir.</p>
+            <p>No repartimos ayuda desde la distancia: visitamos, escuchamos, oramos y celebramos junto a las comunidades donde estamos presentes. Nuestro trabajo combina la acción concreta —alimento, ropa, juguetes, compañía— con el acompañamiento espiritual que sostiene el alma en los momentos difíciles.</p>
+          </div>
+          <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:1.4rem;color:#2E4356;border-left:3px solid #C79A3C;padding-left:22px;margin:0;max-width:52ch;">"Todo lo que hagan, háganlo de buena gana, como si estuvieran sirviendo al Señor y no a los hombres." — Colosenses 3:23 (Dios Habla Hoy)</blockquote>
+        </div>
+        <div style="display:flex;gap:36px;flex-wrap:wrap;margin-top:30px;">
+          <div><b style="font-family:'Fraunces',serif;font-size:2rem;color:#3B5747;display:block;">4</b><span style="font-size:.82rem;color:#585448;">frentes de servicio activos</span></div>
+          <div><b style="font-family:'Fraunces',serif;font-size:2rem;color:#3B5747;display:block;">100%</b><span style="font-size:.82rem;color:#585448;">voluntariado inspirado en la fe</span></div>
+          <div><b style="font-family:'Fraunces',serif;font-size:2rem;color:#3B5747;display:block;">3</b><span style="font-size:.82rem;color:#585448;">comunidades prioritarias: niñez, vejez y familias vulnerables</span></div>
+        </div>
+      </section>
+
+      <section style="padding:56px 0;background:#EFE7D6;margin:0 -28px;padding-left:28px;padding-right:28px;">
+        <div style="max-width:60ch;margin-bottom:34px;">
+          <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Qué hacemos</span>
+          <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Nuestras actividades a lo largo del año</h2>
+        </div>
+        <div style="display:grid;gap:22px;grid-template-columns:{{ grid3Cols }};">
+          <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;">
+            <div style="width:44px;height:44px;border-radius:11px;background:#DCE6DE;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" stroke-linecap="round" width="22" height="22"><path d="M20 12V8a2 2 0 00-2-2h-3l-1.5-2h-3L9 6H6a2 2 0 00-2 2v10a2 2 0 002 2h7"></path><circle cx="18" cy="17" r="3"></circle></svg>
+            </div>
+            <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Niños con cáncer</h3>
+            <p>Visitas, juguetes y momentos de alegría para acompañar a los más pequeños y a sus familias en el hospital.</p>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;">
+            <div style="width:44px;height:44px;border-radius:11px;background:#DCE6DE;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" stroke-linecap="round" width="22" height="22"><path d="M12 21c-4-2.5-8-6-8-10a5 5 0 0110-1 5 5 0 0110 1c0 4-4 7.5-8 10z"></path></svg>
+            </div>
+            <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Adultos mayores</h3>
+            <p>Acompañamiento en asilos: conversación, música y cariño para alegrar los días de quienes muchas veces esperan una visita.</p>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;">
+            <div style="width:44px;height:44px;border-radius:11px;background:#DCE6DE;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" stroke-linecap="round" width="22" height="22"><path d="M3 12l2-7h14l2 7M5 12v7a1 1 0 001 1h12a1 1 0 001-1v-7M3 12h18"></path></svg>
+            </div>
+            <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Familias de bajos recursos</h3>
+            <p>Donaciones de comida y ropa entregadas puerta a puerta a las familias que más lo necesitan.</p>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding:56px 0;">
+        <div style="max-width:60ch;margin-bottom:34px;">
+          <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Nuestro propósito</span>
+          <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Servir es nuestra forma de orar.</h2>
+        </div>
+        <ul style="list-style:none;margin:0;padding:0;display:grid;gap:14px;max-width:60ch;">
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="width:8px;height:8px;border-radius:50%;background:#C79A3C;margin-top:8px;flex-shrink:0;"></span><p style="margin:0;"><b>Fe en acción:</b> creemos que el amor de Dios se hace visible cuando lo llevamos a quien sufre.</p></li>
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="width:8px;height:8px;border-radius:50%;background:#C79A3C;margin-top:8px;flex-shrink:0;"></span><p style="margin:0;"><b>Dignidad primero:</b> acompañamos con respeto, escucha y cercanía, no con lástima.</p></li>
+          <li style="display:flex;gap:12px;align-items:flex-start;"><span style="width:8px;height:8px;border-radius:50%;background:#C79A3C;margin-top:8px;flex-shrink:0;"></span><p style="margin:0;"><b>Esperanza sostenida:</b> no buscamos ayudas puntuales, sino presencia constante en cada comunidad.</p></li>
+        </ul>
+      </section>
+    </section>
+    </sc-if>
+
+    <!-- ============ TAB: FORMACIÓN ESPIRITUAL ============ -->
+    <sc-if value="{{ tabFe }}" hint-placeholder-val="{{ false }}">
+    <section style="animation:fadein .4s ease;padding:56px 0;">
+      <div style="max-width:60ch;margin-bottom:34px;">
+        <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Formación espiritual</span>
+        <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Un espacio para crecer en la fe cada día</h2>
+      </div>
+
+      <div style="display:grid;gap:26px;grid-template-columns:{{ feGridCols }};">
+        <div>
+          <div style="background:linear-gradient(160deg, #2E4356 0%, #1c2c3a 100%);color:#F8F4EA;border-radius:14px;padding:28px;">
+            <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#C9D6DC;margin-bottom:.6em;display:inline-block;">Evangelio del día</span>
+            <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#F1E2BB;">Lee la Palabra de hoy</h3>
+            <p style="color:#D8E0E6;">Para mantener el evangelio siempre actualizado y fiel a la liturgia oficial, te conectamos directamente con la fuente de la Conferencia Episcopal.</p>
+            <a style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;text-decoration:none;background:#C79A3C;color:#2B2409;" href="https://www.vatican.va/news_services/liturgy/index_sp.htm" target="_blank" rel="noopener">Leer el evangelio de hoy ↗</a>
+          </div>
+
+          <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;margin-top:22px;">
+            <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Recomendaciones de lectura</h3>
+            <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid rgba(43,42,36,0.12);">
+              <div><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1rem;margin-bottom:2px;">Historia de un Alma</h4><p style="margin:0;font-size:.86rem;color:#585448;">Santa Teresita del Niño Jesús — el "caminito" de confianza y sencillez.</p></div>
+              <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#DCE6DE;color:#3B5747;padding:4px 9px;border-radius:999px;white-space:nowrap;height:fit-content;">Espiritualidad</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid rgba(43,42,36,0.12);">
+              <div><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1rem;margin-bottom:2px;">Confesiones</h4><p style="margin:0;font-size:.86rem;color:#585448;">San Agustín — un testimonio de conversión y búsqueda de Dios.</p></div>
+              <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#DCE6DE;color:#3B5747;padding:4px 9px;border-radius:999px;white-space:nowrap;height:fit-content;">Clásico</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid rgba(43,42,36,0.12);">
+              <div><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1rem;margin-bottom:2px;">Camino</h4><p style="margin:0;font-size:.86rem;color:#585448;">San Josemaría Escrivá — mil puntos breves para la vida cotidiana.</p></div>
+              <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#DCE6DE;color:#3B5747;padding:4px 9px;border-radius:999px;white-space:nowrap;height:fit-content;">Vida diaria</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;">
+              <div><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1rem;margin-bottom:2px;">Introducción a la vida devota</h4><p style="margin:0;font-size:.86rem;color:#585448;">San Francisco de Sales — santidad posible en medio del mundo.</p></div>
+              <span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#DCE6DE;color:#3B5747;padding:4px 9px;border-radius:999px;white-space:nowrap;height:fit-content;">Formación</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;border-left:3px solid #5C7A66;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;margin:0;">Cápsula de fe</h3>
+              <span style="font-size:.72rem;color:#585448;white-space:nowrap;">{{ faithCapsulePos }}</span>
+            </div>
+            <p style="margin:.6em 0 1em 0;">{{ faithCapsule }}</p>
+            <button style="background:#DCE6DE;border:none;border-radius:999px;padding:8px 16px;font-family:'Karla',sans-serif;font-weight:600;font-size:.8rem;color:#3B5747;cursor:pointer;" style-hover="background:#C79A3C; color:#2B2409;" onClick="{{ onNextFaithCapsule }}">Otra cápsula →</button>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;border-left:3px solid #5C7A66;margin-top:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;margin:0;">Dato de cultura católica</h3>
+              <span style="font-size:.72rem;color:#585448;white-space:nowrap;">{{ cultureFactPos }}</span>
+            </div>
+            <p style="margin:.6em 0 1em 0;">{{ cultureFact }}</p>
+            <button style="background:#DCE6DE;border:none;border-radius:999px;padding:8px 16px;font-family:'Karla',sans-serif;font-weight:600;font-size:.8rem;color:#3B5747;cursor:pointer;" style-hover="background:#C79A3C; color:#2B2409;" onClick="{{ onNextCultureFact }}">Otro dato →</button>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;border-left:3px solid #5C7A66;margin-top:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;margin:0;">Vida de Jesús</h3>
+              <span style="font-size:.72rem;color:#585448;white-space:nowrap;">{{ jesusLifePos }}</span>
+            </div>
+            <p style="margin:.6em 0 1em 0;">{{ jesusLifeFact }}</p>
+            <button style="background:#DCE6DE;border:none;border-radius:999px;padding:8px 16px;font-family:'Karla',sans-serif;font-weight:600;font-size:.8rem;color:#3B5747;cursor:pointer;" style-hover="background:#C79A3C; color:#2B2409;" onClick="{{ onNextJesusLife }}">Otro momento →</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#DCE6DE;border-radius:14px;padding:28px;margin-top:30px;">
+        <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Acompañamiento espiritual</span>
+        <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.5rem;margin-bottom:10px;">¿Qué estás viviendo hoy?</h2>
+        <div style="font-size:.8rem;color:#3B5747;background:rgba(255,255,255,.5);padding:10px 14px;border-radius:10px;margin-bottom:18px;">Esta herramienta ofrece compañía espiritual y una palabra de la Biblia para tu momento. No reemplaza la atención médica, psicológica o profesional.</div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+          <sc-for list="{{ situations }}" as="s" hint-placeholder-count="8">
+            <button style="{{ s.style }}" onClick="{{ s.onClick }}">{{ s.label }}</button>
+          </sc-for>
+          <button style="{{ crisisBtnStyle }}" onClick="{{ onCrisisClick }}">Siento que ya no quiero vivir</button>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:6px;">
+          <input type="text" placeholder="O cuéntanos con tus palabras qué situación estás viviendo…" style="flex:1;padding:12px 16px;border-radius:999px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;" value="{{ freeText }}" onChange="{{ onFreeTextChange }}" onKeyDown="{{ onFreeTextKeyDown }}">
+          <button style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#3B5747;color:#F8F4EA;white-space:nowrap;" onClick="{{ onFreeTextSubmit }}">Buscar una palabra para mí</button>
+        </div>
+
+        <sc-if value="{{ verseIdle }}" hint-placeholder-val="{{ true }}"><span></span></sc-if>
+        <sc-if value="{{ verseLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:20px;background:#fff;border-radius:12px;padding:22px;border:1px solid rgba(43,42,36,0.12);">
+            <p style="font-size:.85rem;color:#585448;font-style:italic;margin:0;">Buscando una palabra para ti…</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ verseResultShown }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:20px;display:grid;gap:16px;">
+            <sc-for list="{{ verseOptions }}" as="opt" hint-placeholder-count="3">
+              <div style="background:#fff;border-radius:12px;padding:22px;border:1px solid rgba(43,42,36,0.12);animation:fadein .3s ease;">
+                <span style="font-weight:700;font-size:.82rem;color:#3B5747;text-transform:uppercase;letter-spacing:.04em;">{{ opt.ref }}</span>
+                <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-size:1.15rem;color:#2E4356;margin:10px 0 10px 0;">"{{ opt.cita }}"</blockquote>
+                <p style="margin:0;">{{ opt.reflexion }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ verseCrisisShown }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:20px;background:#FFF4EF;border-radius:12px;padding:22px;border:1px solid #C1704F;animation:fadein .3s ease;">
+            <span style="font-weight:700;font-size:.82rem;color:#3B5747;text-transform:uppercase;letter-spacing:.04em;">Tu vida tiene un valor infinito</span>
+            <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-size:1.15rem;color:#2E4356;margin:10px 0 10px 0;">"Yo sé los planes que tengo para ustedes, planes para su bienestar y no para su mal, a fin de darles un futuro lleno de esperanza. Yo, el Señor, lo afirmo." — Jeremías 29:11 (Dios Habla Hoy)</blockquote>
+            <p>Lo que sientes ahora mismo es real y duele, pero no tienes que atravesarlo en soledad. Dios te creó con un propósito único, y tu vida importa, hoy y siempre. Por favor, habla ahora con alguien de confianza o comunícate con una línea de ayuda profesional — no estás solo/a.</p>
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(43,42,36,0.12);font-size:.88rem;">
+              <b style="display:block;margin-bottom:6px;">Líneas de ayuda en Colombia (gratuitas, 24/7):</b>
+              Línea 106 — nacional de salud mental y prevención del suicidio<br>
+              Línea de Salud Mental del Atlántico — 317 621 8394<br>
+              Emergencias — 123
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- ============ TAB: ACTIVIDADES Y DONACIONES ============ -->
+    <sc-if value="{{ tabActividades }}" hint-placeholder-val="{{ false }}">
+    <section style="animation:fadein .4s ease;padding:56px 0;">
+      <div style="max-width:60ch;margin-bottom:34px;">
+        <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Actividades y donaciones</span>
+        <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Así llevamos la ayuda durante todo el año</h2>
+      </div>
+
+      <div style="display:grid;gap:30px;align-items:start;grid-template-columns:{{ actLayoutCols }};">
+        <div>
+          <div style="display:grid;gap:22px;grid-template-columns:{{ grid2Cols }};">
+            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
+              <div style="height:120px;display:flex;align-items:center;justify-content:center;background:#F1E2BB;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#C79A3C" stroke-width="1.6" width="46" height="46"><rect x="3" y="10" width="18" height="10" rx="1"></rect><path d="M3 10l3-6h12l3 6M12 4v6M9 10a3 3 0 016 0"></path></svg>
+              </div>
+              <div style="padding:18px 20px 22px;"><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;">Donación de juguetes</h4><p style="font-size:.87rem;color:#585448;margin:0;">Campañas de recolección y entrega de juguetes a niños hospitalizados y en comunidades vulnerables.</p></div>
+            </div>
+            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
+              <div style="height:120px;display:flex;align-items:center;justify-content:center;background:#DCE6DE;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.6" width="46" height="46"><path d="M12 3c-3 3-5 5-5 9a5 5 0 0010 0c0-4-2-6-5-9z"></path></svg>
+              </div>
+              <div style="padding:18px 20px 22px;"><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;">Donación de comida</h4><p style="font-size:.87rem;color:#585448;margin:0;">Mercados y comidas preparadas entregadas puerta a puerta a familias de bajos recursos.</p></div>
+            </div>
+            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
+              <div style="height:120px;display:flex;align-items:center;justify-content:center;background:#F1E2D9;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#C1704F" stroke-width="1.6" width="46" height="46"><path d="M8 4l4 2 4-2 3 3-2 2v11H7V9L5 7z"></path></svg>
+              </div>
+              <div style="padding:18px 20px 22px;"><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;">Donación de ropa</h4><p style="font-size:.87rem;color:#585448;margin:0;">Recolección de ropa en buen estado, clasificada y entregada según la necesidad de cada familia.</p></div>
+            </div>
+            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
+              <div style="height:120px;display:flex;align-items:center;justify-content:center;background:#DCE6DE;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.6" width="46" height="46"><path d="M12 21c-4-2.5-8-6-8-10a5 5 0 0110-1 5 5 0 0110 1c0 4-4 7.5-8 10z"></path></svg>
+              </div>
+              <div style="padding:18px 20px 22px;"><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;">Acompañamiento en asilos</h4><p style="font-size:.87rem;color:#585448;margin:0;">Visitas periódicas para conversar, cantar y celebrar junto a nuestros adultos mayores.</p></div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;margin-top:22px;">
+            <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Galería de actividades</h3>
+            <p style="font-size:.88rem;">Este espacio está listo para que la fundación suba las fotos y videos reales de cada jornada — entregas, visitas y campañas — a medida que se realicen.</p>
+          </div>
+        </div>
+
+        <!-- SIDEBAR: DONATIONS -->
+        <aside style="background:#2E4356;color:#F8F4EA;border-radius:14px;padding:26px;position:sticky;top:100px;">
+          <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#F1E2BB;margin-bottom:.6em;display:inline-block;">Quiero ayudar</span>
+          <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#fff;">Haz parte de esta obra</h3>
+          <p style="color:#CBD7DF;font-size:.88rem;">Puedes apoyarnos con una donación económica o entregando bienes materiales para las familias que acompañamos.</p>
+
+          <div style="display:flex;background:rgba(255,255,255,.1);border-radius:999px;padding:4px;margin:18px 0;">
+            <button style="{{ donateDineroBtnStyle }}" onClick="{{ onDonateDinero }}">Donar dinero</button>
+            <button style="{{ donateBienesBtnStyle }}" onClick="{{ onDonateBienes }}">Donar bienes</button>
+          </div>
+
+          <sc-if value="{{ donatePaneDinero }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);"><span style="color:#9FB2BE;">Banco</span><span>[Nombre del banco]</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);"><span style="color:#9FB2BE;">Tipo de cuenta</span><span>[Ahorros / Corriente]</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);"><span style="color:#9FB2BE;">N.º de cuenta</span><span>[000-000000-00]</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;"><span style="color:#9FB2BE;">NIT / Titular</span><span>[Nombre de la fundación]</span></div>
+              <span style="font-size:.72rem;color:#F1E2BB;margin-top:10px;display:block;">Reemplaza estos datos con la información bancaria real de la fundación antes de publicar.</span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ donatePaneBienes }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <p style="font-size:.85rem;">Déjanos tus datos y coordinamos la recolección de juguetes, comida o ropa en tu dirección.</p>
+              <form style="display:grid;gap:10px;margin-top:6px;" onSubmit="{{ onPickupSubmit }}">
+                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Nombre</label><input required style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;"></div>
+                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Teléfono</label><input required type="tel" style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;"></div>
+                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Tipo de donación</label>
+                  <select style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;">
+                    <option>Juguetes</option><option>Comida</option><option>Ropa</option><option>Otro</option>
+                  </select>
+                </div>
+                <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Dirección de recogida</label><textarea required style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;resize:vertical;min-height:64px;"></textarea></div>
+                <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#C79A3C;color:#2B2409;">Solicitar recogida</button>
+              </form>
+              <sc-if value="{{ pickupSubmitted }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#DCE6DE;color:#3B5747;padding:12px 16px;border-radius:10px;font-size:.87rem;margin-top:6px;">¡Gracias! Hemos preparado tu solicitud — se enviará por WhatsApp a nuestro equipo de logística.</div>
+              </sc-if>
+            </div>
+          </sc-if>
+        </aside>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- ============ TAB: TESTIMONIOS ============ -->
+    <sc-if value="{{ tabTestimonios }}" hint-placeholder-val="{{ false }}">
+    <section style="animation:fadein .4s ease;padding:56px 0;">
+      <div style="max-width:60ch;margin-bottom:34px;">
+        <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Testimonios</span>
+        <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Historias de esperanza</h2>
+        <p style="max-width:60ch;">Estos son ejemplos de cómo podrían presentarse los testimonios. Reemplázalos con relatos e imágenes reales de las personas y familias acompañadas, siempre con su autorización.</p>
+      </div>
+      <div style="display:grid;gap:22px;grid-template-columns:{{ grid3Cols }};">
+        <div style="background:#fff;border-radius:14px;padding:26px;border:1px solid rgba(43,42,36,0.12);">
+          <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">Ejemplo — reemplazar</span>
+          <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.05rem;">"Cuando mi hijo estaba en el hospital, la visita de la fundación fue un respiro de alegría en medio de tantos días difíciles."</p>
+          <div style="margin-top:14px;display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;">M</div><div><b style="display:block;font-size:.88rem;">Madre de familia</b><span style="font-size:.78rem;color:#585448;">Acompañamiento hospitalario</span></div></div>
+        </div>
+        <div style="background:#fff;border-radius:14px;padding:26px;border:1px solid rgba(43,42,36,0.12);">
+          <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">Ejemplo — reemplazar</span>
+          <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.05rem;">"Después de años sintiéndome sola en el asilo, ahora espero cada visita con el corazón lleno de ilusión."</p>
+          <div style="margin-top:14px;display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;">R</div><div><b style="display:block;font-size:.88rem;">Residente de un asilo</b><span style="font-size:.78rem;color:#585448;">Programa de adultos mayores</span></div></div>
+        </div>
+        <div style="background:#fff;border-radius:14px;padding:26px;border:1px solid rgba(43,42,36,0.12);">
+          <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">Ejemplo — reemplazar</span>
+          <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.05rem;">"La donación de mercados llegó justo cuando más lo necesitábamos. Sentimos que Dios no nos había olvidado."</p>
+          <div style="margin-top:14px;display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;">F</div><div><b style="display:block;font-size:.88rem;">Familia beneficiaria</b><span style="font-size:.78rem;color:#585448;">Donación de alimentos</span></div></div>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- ============ TAB: ÚNETE ============ -->
+    <sc-if value="{{ tabUnete }}" hint-placeholder-val="{{ false }}">
+    <section style="animation:fadein .4s ease;padding:56px 0;">
+      <div style="max-width:60ch;margin-bottom:34px;">
+        <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Únete</span>
+        <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Camina con nosotros</h2>
+      </div>
+      <div style="display:grid;gap:30px;grid-template-columns:{{ grid2Cols }};">
+        <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;">
+          <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Voluntariado</h3>
+          <p>Súmate como voluntario en visitas, campañas de donación o formación espiritual. No necesitas experiencia previa: solo el deseo de servir.</p>
+          <form style="display:grid;gap:12px;" onSubmit="{{ onVolunteerSubmit }}">
+            <input placeholder="Nombre completo" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
+            <input placeholder="Correo electrónico" type="email" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
+            <input placeholder="Teléfono / WhatsApp" type="tel" required style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
+            <select style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;">
+              <option>Me interesa: Niños con cáncer</option>
+              <option>Me interesa: Adultos mayores</option>
+              <option>Me interesa: Donaciones y logística</option>
+              <option>Me interesa: Formación espiritual</option>
+              <option>Quiero unirme al servicio</option>
+            </select>
+            <textarea placeholder="Cuéntanos brevemente por qué quieres unirte" rows="3" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;"></textarea>
+            <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#3B5747;color:#F8F4EA;">Quiero ser voluntario/a</button>
+          </form>
+          <sc-if value="{{ volunteerSubmitted }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#DCE6DE;color:#3B5747;padding:12px 16px;border-radius:10px;font-size:.87rem;margin-top:6px;">¡Gracias por tu deseo de servir! Nos pondremos en contacto contigo muy pronto.</div>
+          </sc-if>
+        </div>
+
+        <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;">
+          <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Contacto y redes</h3>
+          <ul style="list-style:none;margin:0;padding:0;display:grid;gap:14px;">
+            <li style="display:flex;gap:12px;align-items:center;font-size:.92rem;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="20" height="20" style="flex-shrink:0;"><path d="M3 8l9 6 9-6M3 6h18v12H3z"></path></svg> [correo@unnuevocamino.org]</li>
+            <li style="display:flex;gap:12px;align-items:center;font-size:.92rem;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="20" height="20" style="flex-shrink:0;"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.5 2.1L8 9.7a16 16 0 006.3 6.3l1.2-1.2a2 2 0 012.1-.5c.9.3 1.8.5 2.7.6a2 2 0 011.7 2.1z"></path></svg> [+57 300 000 0000]</li>
+            <li style="display:flex;gap:12px;align-items:center;font-size:.92rem;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="20" height="20" style="flex-shrink:0;"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg> Barranquilla, Atlántico, Colombia</li>
+          </ul>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <a href="#" aria-label="Instagram" style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="17" height="17"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></a>
+            <a href="#" aria-label="Facebook" style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="17" height="17"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path></svg></a>
+            <a href="#" aria-label="WhatsApp" style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="17" height="17"><path d="M21 11.5a8.5 8.5 0 01-12.4 7.5L3 20l1.1-5.4A8.5 8.5 0 1121 11.5z"></path></svg></a>
+          </div>
+          <p style="font-size:.78rem;color:#585448;margin-top:16px;">Reemplaza estos datos de ejemplo con el correo, teléfono y redes sociales reales de la fundación.</p>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+  </main>
+
+  <footer style="background:#2E4356;color:#B9C7D0;padding:40px 0 26px;margin-top:20px;">
+    <div style="max-width:1120px;margin:0 auto;padding:0 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;align-items:flex-start;">
+      <div>
+        <h4 style="font-family:'Fraunces',serif;font-weight:600;color:#fff;font-size:.95rem;">Un Nuevo Camino</h4>
+        <p style="max-width:32ch;font-size:.82rem;">Un camino católico junto a niños con cáncer, adultos mayores y familias de bajos recursos, inspirado en el amor de Dios.</p>
+      </div>
+      <div>
+        <h4 style="font-family:'Fraunces',serif;font-weight:600;color:#fff;font-size:.95rem;">Navegación</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:grid;gap:6px;">
+          <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goInicio }}">Inicio</a></li>
+          <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goFe }}">Formación espiritual</a></li>
+          <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goActividades }}">Actividades y donaciones</a></li>
+          <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goTestimonios }}">Testimonios</a></li>
+          <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goUnete }}">Únete</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="max-width:1120px;margin:26px auto 0;padding:18px 28px 0;border-top:1px solid rgba(255,255,255,.12);font-size:.75rem;color:#8FA1AC;">© 2026 Un Nuevo Camino. Sitio de ejemplo — reemplaza los datos de contacto y bancarios antes de publicar.</div>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CRISIS_KEYWORDS = ['suicid','matarme','quiero morir','no quiero vivir','acabar con mi vida','hacerme daño','hacerme dano','quitarme la vida','ya no quiero vivir','autolesion','autolesión','no vale la pena vivir'];
+
+const FAITH_CAPSULES = [
+  '"La fe que no duda es una fe muerta." Fortalecer la vida espiritual empieza por dedicar unos minutos cada día a la oración silenciosa: no se trata de decir muchas palabras, sino de dejarse mirar por Dios.',
+  '"La oración es la respiración del alma." Cuando el día se llena de afanes, volver un instante a Dios en silencio renueva la esperanza y la paz interior.',
+  '"No hay santo sin pasado, ni pecador sin futuro." La misericordia de Dios siempre está disponible para quien decide volver a empezar.',
+  '"Todo cansancio se alivia con esperanza." Confiar en el plan de Dios no elimina las dificultades, pero cambia la forma en que las enfrentamos.'
+];
+
+const JESUS_LIFE = [
+  'Jesús pasó gran parte de su vida pública recorriendo caminos: enseñaba en el camino, sanaba en el camino, se encontraba con la gente en el camino. Por eso Él mismo dijo: "Yo soy el camino, la verdad y la vida. Solamente por mí se puede llegar al Padre" (Juan 14:6, Dios Habla Hoy).',
+  'Antes de comenzar su vida pública, Jesús vivió treinta años en Nazaret, en una familia sencilla de carpinteros, mostrando que la santidad también se vive en lo cotidiano.',
+  'Jesús eligió a doce apóstoles, hombres comunes, para acompañarlo y continuar su misión — un recordatorio de que Dios llama a personas ordinarias para obras extraordinarias.',
+  'Gran parte del ministerio de Jesús ocurrió compartiendo mesa con otros: comió con pecadores, celebró bodas y multiplicó panes, mostrando que el amor de Dios se vive en comunidad.'
+];
+
+const CULTURE_FACTS = [
+  'La Biblia católica está compuesta por 73 libros: 46 del Antiguo Testamento y 27 del Nuevo Testamento. Los Evangelios —Mateo, Marcos, Lucas y Juan— narran la vida de Jesús desde cuatro miradas distintas.',
+  'La Misa católica tiene sus raíces en la Última Cena y se celebra en el mundo entero, en cientos de idiomas, siguiendo la misma estructura central desde hace siglos.',
+  'El Rosario recorre los misterios de la vida de Jesús a través de María, y cada una de sus cinco décadas invita a meditar en un momento distinto de la fe.',
+  'La Iglesia Católica reconoce siete sacramentos: Bautismo, Confirmación, Eucaristía, Reconciliación, Unción de los Enfermos, Orden Sacerdotal y Matrimonio.',
+  'El Catecismo de la Iglesia Católica, publicado en 1992, resume de forma ordenada la fe, los sacramentos, la moral y la oración cristiana.',
+  'San Francisco de Asís es considerado patrono de los animales y la ecología; su amor por la creación sigue inspirando a millones hoy.'
+];
+
+const SITUATIONS = [
+  'Estoy triste y no sé cómo salir de la tristeza|Estoy triste',
+  'Siento miedo y ansiedad por el futuro|Siento miedo o ansiedad',
+  'Quiero saber cómo escoger bien a mi pareja según la fe|Escoger a mi pareja',
+  'Estoy luchando contra la tentación de ser infiel|Fidelidad',
+  'Quiero sentirme más cerca de Dios en mi vida diaria|Cercanía con Dios',
+  'Necesito fuerzas para perdonar a alguien que me hizo daño|Necesito perdonar',
+  'Estoy viviendo un duelo o una pérdida difícil|Duelo o pérdida',
+  'Quiero ser una mejor persona y crecer en virtud|Ser mejor persona'
+];
+
+class Component extends DCLogic {
+  state = {
+    activeTab: 'inicio',
+    isMobile: false,
+    navOpen: false,
+    donatePane: 'dinero',
+    pickupSubmitted: false,
+    volunteerSubmitted: false,
+    freeText: '',
+    cultureFactIndex: 0,
+    faithCapsuleIndex: 0,
+    jesusLifeIndex: 0,
+    selectedSituation: null, // situation string or '__CRISIS__'
+    verseStatus: 'idle', // idle | loading | result | crisis
+    verseOptions: []
+  };
+
+  componentDidMount() {
+    this.mq = window.matchMedia('(max-width: 880px)');
+    this.onMqChange = (e) => this.setState({ isMobile: e.matches });
+    this.setState({ isMobile: this.mq.matches });
+    this.mq.addEventListener('change', this.onMqChange);
+  }
+
+  componentWillUnmount() {
+    if (this.mq) this.mq.removeEventListener('change', this.onMqChange);
+  }
+
+  isCrisisText(text) {
+    const t = text.toLowerCase();
+    return CRISIS_KEYWORDS.some(k => t.includes(k));
+  }
+
+  setTab(name) {
+    this.setState({ activeTab: name, navOpen: false });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async requestVerse(situation) {
+    this.setState({ selectedSituation: situation });
+    if (situation === '__CRISIS__' || this.isCrisisText(situation)) {
+      this.setState({ verseStatus: 'crisis' });
+      return;
+    }
+    this.setState({ verseStatus: 'loading' });
+    try {
+      const prompt = `Eres un acompañante espiritual católico, cálido y pastoral. La persona describe esta situación: "${situation}".
+Usa siempre la versión bíblica "Dios Habla Hoy" (DHH) para las citas.
+Dame EXACTAMENTE 3 opciones distintas de citas bíblicas para esta situación, cada una con su propia reflexión breve, para que la persona pueda evaluar varias.
+Responde ÚNICAMENTE en este formato, sin nada más, repetido 3 veces:
+OPCION
+REFERENCIA: [libro capítulo:versículo]
+CITA: [la cita bíblica textual según la versión Dios Habla Hoy, máximo 25 palabras, SIN comillas envolviéndola]
+REFLEXION: [una reflexión pastoral cálida de 2 a 3 frases, con esperanza, fe católica y lenguaje sencillo; no des consejo médico, psicológico ni legal]
+Si detectas cualquier señal de riesgo para la vida o integridad de la persona (ideas suicidas, autolesión, desesperanza extrema), responde exactamente y solo con la palabra: CRISIS_PROTOCOL`;
+
+      const apiResponse = await fetch('/.netlify/functions/verse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+      const data = await apiResponse.json();
+      if (!apiResponse.ok) throw new Error(data.error || 'Error de servidor');
+      const text = data.text;
+
+      if (text.includes('CRISIS_PROTOCOL') || this.isCrisisText(text)) {
+        this.setState({ verseStatus: 'crisis' });
+        return;
+      }
+
+      const blocks = text.split(/OPCION/i).map(b => b.trim()).filter(Boolean);
+      const options = blocks.map(block => {
+        const refMatch = block.match(/REFERENCIA:\s*(.+)/i);
+        const citaMatch = block.match(/CITA:\s*(.+)/i);
+        const reflexionMatch = block.match(/REFLEXION:\s*([\s\S]+)/i);
+        const stripQuotes = (t) => t.replace(/^["'“”‘’]+|["'“”‘’]+$/g, '').trim();
+        return {
+          ref: refMatch ? refMatch[1].trim() : 'Palabra para ti',
+          cita: citaMatch ? stripQuotes(citaMatch[1].trim()) : block,
+          reflexion: reflexionMatch ? reflexionMatch[1].trim() : ''
+        };
+      }).filter(o => o.cita);
+
+      this.setState({
+        verseStatus: 'result',
+        verseOptions: options.length ? options : [{ ref: 'Palabra para ti', cita: text, reflexion: '' }]
+      });
+    } catch (err) {
+      this.setState({
+        verseStatus: 'result',
+        verseOptions: [{
+          ref: 'Salmo 46:1 (DHH)',
+          cita: 'Dios es nuestro refugio y nuestra fortaleza; nuestra ayuda segura en momentos de angustia.',
+          reflexion: 'No pudimos conectar con el acompañante espiritual en este momento — esta palabra te acompaña mientras tanto.'
+        }]
+      });
+    }
+  }
+
+  renderVals() {
+    const s = this.state;
+    const isMobile = s.isMobile;
+
+    const navList = [
+      { id: 'inicio', label: 'Inicio' },
+      { id: 'fe', label: 'Formación espiritual' },
+      { id: 'actividades', label: 'Actividades y donaciones' },
+      { id: 'testimonios', label: 'Testimonios' },
+      { id: 'unete', label: 'Únete' }
+    ];
+
+    const navItems = navList.map(item => {
+      const selected = item.id === s.activeTab;
+      return {
+        label: item.label,
+        selected,
+        onClick: () => this.setTab(item.id),
+        liStyle: '',
+        btnStyle: `background:${selected ? '#F1E2BB' : '#F8F4EA'};border:none;cursor:pointer;font-family:'Karla',sans-serif;font-weight:600;font-size:.82rem;color:${selected ? '#2E4356' : '#585448'};padding:8px 14px;display:flex;align-items:center;gap:8px;border-radius:999px;transition:color .2s, background .2s;width:${isMobile ? '100%' : 'auto'};justify-content:${isMobile ? 'flex-start' : 'center'};`,
+        dotStyle: `width:9px;height:9px;border-radius:50%;background:${selected ? '#C79A3C' : '#DCE6DE'};border:2px solid ${selected ? '#C79A3C' : '#5C7A66'};flex-shrink:0;transform:scale(${selected ? 1.2 : 1});display:inline-block;`
+      };
+    });
+
+    const navWrapStyle = isMobile
+      ? `position:absolute;top:100%;right:0;left:0;background:#F8F4EA;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:10px;margin-top:8px;box-shadow:0 12px 30px rgba(43,42,36,.12);display:${s.navOpen ? 'flex' : 'none'};`
+      : `position:relative;`;
+
+    const donateDineroBtnStyle = `flex:1;background:${s.donatePane === 'dinero' ? '#C79A3C' : 'none'};border:none;color:${s.donatePane === 'dinero' ? '#2B2409' : '#CBD7DF'};padding:9px;border-radius:999px;cursor:pointer;font-family:'Karla',sans-serif;font-weight:700;font-size:.78rem;`;
+    const donateBienesBtnStyle = `flex:1;background:${s.donatePane === 'bienes' ? '#C79A3C' : 'none'};border:none;color:${s.donatePane === 'bienes' ? '#2B2409' : '#CBD7DF'};padding:9px;border-radius:999px;cursor:pointer;font-family:'Karla',sans-serif;font-weight:700;font-size:.78rem;`;
+
+    const situations = SITUATIONS.map(row => {
+      const [situation, label] = row.split('|');
+      const selected = s.selectedSituation === situation;
+      return {
+        label,
+        onClick: () => this.requestVerse(situation),
+        style: `background:${selected ? '#3B5747' : '#fff'};border:1px solid ${selected ? '#3B5747' : 'rgba(43,42,36,0.12)'};border-radius:999px;padding:9px 16px;font-family:'Karla',sans-serif;font-weight:600;font-size:.84rem;cursor:pointer;color:${selected ? '#F8F4EA' : '#2B2A24'};transition:background .15s, border-color .15s, color .15s;`
+      };
+    });
+    const crisisSelected = s.selectedSituation === '__CRISIS__';
+
+    return {
+      isMobile,
+      navDirection: isMobile ? 'column' : 'row',
+      navWrapStyle,
+      navItems,
+      grid2Cols: isMobile ? '1fr' : 'repeat(2,1fr)',
+      grid3Cols: isMobile ? '1fr' : 'repeat(3,1fr)',
+      feGridCols: isMobile ? '1fr' : '1.3fr 1fr',
+      actLayoutCols: isMobile ? '1fr' : '2fr 1fr',
+
+      tabInicio: s.activeTab === 'inicio',
+      tabFe: s.activeTab === 'fe',
+      tabActividades: s.activeTab === 'actividades',
+      tabTestimonios: s.activeTab === 'testimonios',
+      tabUnete: s.activeTab === 'unete',
+
+      onBrandClick: (e) => { e.preventDefault(); this.setTab('inicio'); },
+      goInicio: (e) => { e.preventDefault(); this.setTab('inicio'); },
+      goFe: (e) => { e && e.preventDefault && e.preventDefault(); this.setTab('fe'); },
+      goActividades: (e) => { e && e.preventDefault && e.preventDefault(); this.setTab('actividades'); },
+      goTestimonios: (e) => { e.preventDefault(); this.setTab('testimonios'); },
+      goUnete: (e) => { e.preventDefault(); this.setTab('unete'); },
+
+      toggleNav: () => this.setState({ navOpen: !s.navOpen }),
+
+      situations,
+      crisisBtnStyle: `background:${crisisSelected ? '#C1704F' : '#fff'};border:1px solid #C1704F;border-radius:999px;padding:9px 16px;font-family:'Karla',sans-serif;font-weight:600;font-size:.84rem;cursor:pointer;color:${crisisSelected ? '#fff' : '#C1704F'};transition:background .15s;`,
+      onCrisisClick: () => this.requestVerse('__CRISIS__'),
+      freeText: s.freeText,
+      onFreeTextChange: (e) => this.setState({ freeText: e.target.value }),
+      onFreeTextKeyDown: (e) => { if (e.key === 'Enter' && s.freeText.trim()) this.requestVerse(s.freeText.trim()); },
+      onFreeTextSubmit: () => { if (s.freeText.trim()) this.requestVerse(s.freeText.trim()); },
+
+      verseIdle: s.verseStatus === 'idle',
+      verseLoading: s.verseStatus === 'loading',
+      verseResultShown: s.verseStatus === 'result',
+      verseCrisisShown: s.verseStatus === 'crisis',
+      verseOptions: s.verseOptions,
+
+      cultureFact: CULTURE_FACTS[s.cultureFactIndex],
+      cultureFactCount: CULTURE_FACTS.length,
+      cultureFactPos: (s.cultureFactIndex + 1) + ' / ' + CULTURE_FACTS.length,
+      onNextCultureFact: () => this.setState({ cultureFactIndex: (s.cultureFactIndex + 1) % CULTURE_FACTS.length }),
+
+      faithCapsule: FAITH_CAPSULES[s.faithCapsuleIndex],
+      faithCapsulePos: (s.faithCapsuleIndex + 1) + ' / ' + FAITH_CAPSULES.length,
+      onNextFaithCapsule: () => this.setState({ faithCapsuleIndex: (s.faithCapsuleIndex + 1) % FAITH_CAPSULES.length }),
+
+      jesusLifeFact: JESUS_LIFE[s.jesusLifeIndex],
+      jesusLifePos: (s.jesusLifeIndex + 1) + ' / ' + JESUS_LIFE.length,
+      onNextJesusLife: () => this.setState({ jesusLifeIndex: (s.jesusLifeIndex + 1) % JESUS_LIFE.length }),
+
+      donatePaneDinero: s.donatePane === 'dinero',
+      donatePaneBienes: s.donatePane === 'bienes',
+      donateDineroBtnStyle,
+      donateBienesBtnStyle,
+      onDonateDinero: () => this.setState({ donatePane: 'dinero' }),
+      onDonateBienes: () => this.setState({ donatePane: 'bienes' }),
+
+      pickupSubmitted: s.pickupSubmitted,
+      onPickupSubmit: (e) => { e.preventDefault(); this.setState({ pickupSubmitted: true }); e.target.reset(); },
+      volunteerSubmitted: s.volunteerSubmitted,
+      onVolunteerSubmit: (e) => { e.preventDefault(); this.setState({ volunteerSubmitted: true }); e.target.reset(); }
+    };
+  }
+}
+</script>
+</body>
+</html>
