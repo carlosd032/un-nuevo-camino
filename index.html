@@ -8,22 +8,6 @@
 <script src="./support.js"></script>
 </head>
 <body>
-<!-- Formularios ocultos para que Netlify Forms los detecte en el build.
-     No se muestran ni se usan directamente: los formularios reales están
-     dentro de la app y envían sus datos por fetch a estos mismos nombres. -->
-<form name="volunteer" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input name="nombre">
-  <input name="correo" type="email">
-  <input name="telefono">
-  <select name="interes"><option>Me interesa: Niños con cáncer</option></select>
-  <textarea name="mensaje"></textarea>
-</form>
-<form name="pickup" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input name="nombre">
-  <input name="telefono">
-  <select name="tipo_donacion"><option>Juguetes</option></select>
-  <textarea name="direccion"></textarea>
-</form>
 <x-dc>
 <helmet>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -116,7 +100,7 @@
             <p>Un Nuevo Camino es un movimiento católico sin ánimo de lucro. Creemos que cada persona —un niño enfrentando el cáncer, un adulto mayor que vive en soledad, una familia que no llega a fin de mes— merece sentir que no camina sola, y que ese acompañamiento nace de la fe en un Dios que nos llama a servir.</p>
             <p>No repartimos ayuda desde la distancia: visitamos, escuchamos, oramos y celebramos junto a las comunidades donde estamos presentes. Nuestro trabajo combina la acción concreta —alimento, ropa, juguetes, compañía— con el acompañamiento espiritual que sostiene el alma en los momentos difíciles.</p>
           </div>
-          <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:1.4rem;color:#2E4356;border-left:3px solid #C79A3C;padding-left:22px;margin:0;max-width:52ch;">"Todo lo que hagan, háganlo de buena gana, como si estuvieran sirviendo al Señor y no a los hombres." — Colosenses 3:23 (Dios Habla Hoy)</blockquote>
+          <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:1.4rem;color:#2E4356;border-left:3px solid #C79A3C;padding-left:22px;margin:0;max-width:52ch;">"Todo lo que hagan, háganlo de buena gana, como si estuvieran sirviendo al Señor y no a los hombres." — Colosenses 3,23 (Dios Habla Hoy)</blockquote>
         </div>
         <div style="display:flex;gap:36px;flex-wrap:wrap;margin-top:30px;">
           <div><b style="font-family:'Fraunces',serif;font-size:2rem;color:#3B5747;display:block;">4</b><span style="font-size:.82rem;color:#585448;">frentes de servicio activos</span></div>
@@ -268,7 +252,7 @@
         <sc-if value="{{ verseCrisisShown }}" hint-placeholder-val="{{ false }}">
           <div style="margin-top:20px;background:#FFF4EF;border-radius:12px;padding:22px;border:1px solid #C1704F;animation:fadein .3s ease;">
             <span style="font-weight:700;font-size:.82rem;color:#3B5747;text-transform:uppercase;letter-spacing:.04em;">Tu vida tiene un valor infinito</span>
-            <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-size:1.15rem;color:#2E4356;margin:10px 0 10px 0;">"Yo sé los planes que tengo para ustedes, planes para su bienestar y no para su mal, a fin de darles un futuro lleno de esperanza. Yo, el Señor, lo afirmo." — Jeremías 29:11 (Dios Habla Hoy)</blockquote>
+            <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-size:1.15rem;color:#2E4356;margin:10px 0 10px 0;">"Yo sé los planes que tengo para ustedes, planes para su bienestar y no para su mal, a fin de darles un futuro lleno de esperanza. Yo, el Señor, lo afirmo." — Jeremías 29,11 (Dios Habla Hoy)</blockquote>
             <p>Lo que sientes ahora mismo es real y duele, pero no tienes que atravesarlo en soledad. Dios te creó con un propósito único, y tu vida importa, hoy y siempre. Por favor, habla ahora con alguien de confianza o comunícate con una línea de ayuda profesional — no estás solo/a.</p>
             <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(43,42,36,0.12);font-size:.88rem;">
               <b style="display:block;margin-bottom:6px;">Líneas de ayuda en Colombia (gratuitas, 24/7):</b>
@@ -293,35 +277,31 @@
       <div style="display:grid;gap:30px;align-items:start;grid-template-columns:{{ actLayoutCols }};">
         <div>
           <div style="display:grid;gap:22px;grid-template-columns:{{ grid2Cols }};">
-            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
-              <div style="height:120px;display:flex;align-items:center;justify-content:center;background:#F1E2BB;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#C79A3C" stroke-width="1.6" width="46" height="46"><rect x="3" y="10" width="18" height="10" rx="1"></rect><path d="M3 10l3-6h12l3 6M12 4v6M9 10a3 3 0 016 0"></path></svg>
+            <sc-for list="{{ activities }}" as="act" hint-placeholder-count="4">
+              <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
+                <div style="height:140px;position:relative;background:{{ act.photoUrl }} center/cover no-repeat;cursor:pointer;" onClick="{{ act.onOpenGallery }}">
+                  <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+                    <label style="position:absolute;bottom:8px;right:8px;background:rgba(43,42,36,.7);color:#fff;font-size:.7rem;padding:5px 10px;border-radius:999px;cursor:pointer;font-family:'Karla',sans-serif;" onClick="{{ stopPropagation }}">
+                      + Agregar foto
+                      <input type="file" accept="image/*" style="display:none;" onChange="{{ act.onAddPhoto }}">
+                    </label>
+                  </sc-if>
+                </div>
+                <div style="padding:18px 20px 22px;">
+                  <h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;cursor:pointer;" onClick="{{ act.onOpenGallery }}">{{ act.title }}</h4>
+                  <p style="font-size:.87rem;color:#585448;margin:0 0 10px 0;">{{ act.desc }}</p>
+                  <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><input placeholder="Enlace de video (YouTube, Drive…)" value="{{ act.video }}" onChange="{{ act.onVideoChange }}" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.78rem;"></sc-if>
+                  <sc-if value="{{ act.hasVideoEmbed }}" hint-placeholder-val="{{ false }}">
+                    <iframe src="{{ act.videoEmbed }}" style="width:100%;aspect-ratio:16/9;border:none;border-radius:8px;margin-top:8px;" allowfullscreen></iframe>
+                  </sc-if>
+                </div>
               </div>
-              <div style="padding:18px 20px 22px;"><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;">Donación de juguetes</h4><p style="font-size:.87rem;color:#585448;margin:0;">Campañas de recolección y entrega de juguetes a niños hospitalizados y en comunidades vulnerables.</p></div>
-            </div>
-            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
-              <div style="height:120px;display:flex;align-items:center;justify-content:center;background:#DCE6DE;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.6" width="46" height="46"><path d="M12 3c-3 3-5 5-5 9a5 5 0 0010 0c0-4-2-6-5-9z"></path></svg>
-              </div>
-              <div style="padding:18px 20px 22px;"><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;">Donación de comida</h4><p style="font-size:.87rem;color:#585448;margin:0;">Mercados y comidas preparadas entregadas puerta a puerta a familias de bajos recursos.</p></div>
-            </div>
-            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
-              <div style="height:120px;display:flex;align-items:center;justify-content:center;background:#F1E2D9;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#C1704F" stroke-width="1.6" width="46" height="46"><path d="M8 4l4 2 4-2 3 3-2 2v11H7V9L5 7z"></path></svg>
-              </div>
-              <div style="padding:18px 20px 22px;"><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;">Donación de ropa</h4><p style="font-size:.87rem;color:#585448;margin:0;">Recolección de ropa en buen estado, clasificada y entregada según la necesidad de cada familia.</p></div>
-            </div>
-            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(43,42,36,0.12);background:#fff;">
-              <div style="height:120px;display:flex;align-items:center;justify-content:center;background:#DCE6DE;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.6" width="46" height="46"><path d="M12 21c-4-2.5-8-6-8-10a5 5 0 0110-1 5 5 0 0110 1c0 4-4 7.5-8 10z"></path></svg>
-              </div>
-              <div style="padding:18px 20px 22px;"><h4 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;margin-bottom:4px;font-size:1.02rem;">Acompañamiento en asilos</h4><p style="font-size:.87rem;color:#585448;margin:0;">Visitas periódicas para conversar, cantar y celebrar junto a nuestros adultos mayores.</p></div>
-            </div>
+            </sc-for>
           </div>
 
           <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;margin-top:22px;">
             <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Galería de actividades</h3>
-            <p style="font-size:.88rem;">Este espacio está listo para que la fundación suba las fotos y videos reales de cada jornada — entregas, visitas y campañas — a medida que se realicen.</p>
+            <p style="font-size:.88rem;">Haz clic en el nombre o la foto de cualquier actividad para ver todas sus imágenes. Las fotos de portada son de referencia — inicia sesión como administrador para reemplazarlas por las reales.</p>
           </div>
         </div>
 
@@ -358,6 +338,10 @@
                   </select>
                 </div>
                 <div><label style="font-size:.76rem;color:#CBD7DF;margin-bottom:2px;display:block;">Dirección de recogida</label><textarea name="direccion" required style="width:100%;padding:10px 12px;border-radius:8px;border:none;font-family:'Karla',sans-serif;font-size:.87rem;resize:vertical;min-height:64px;"></textarea></div>
+                <label style="display:flex;gap:10px;align-items:flex-start;font-size:.78rem;color:#CBD7DF;">
+                  <input type="checkbox" required style="margin-top:3px;">
+                  <span>Autorizo el tratamiento de mis datos conforme a la <a href="#" style="color:#F1E2BB;font-weight:600;" onClick="{{ onOpenPrivacy }}">Política de Protección de Datos</a>.</span>
+                </label>
                 <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#C79A3C;color:#2B2409;">Solicitar recogida</button>
               </form>
               <sc-if value="{{ pickupSubmitted }}" hint-placeholder-val="{{ false }}">
@@ -370,31 +354,93 @@
     </section>
     </sc-if>
 
+    <sc-if value="{{ galleryOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;background:rgba(43,42,36,.55);display:flex;align-items:center;justify-content:center;padding:24px;z-index:200;" onClick="{{ onCloseGallery }}">
+        <div style="background:#fff;border-radius:16px;padding:28px;max-width:720px;width:100%;max-height:85vh;overflow-y:auto;position:relative;" onClick="{{ stopPropagation }}">
+          <button aria-label="Cerrar" style="position:absolute;top:16px;right:16px;background:#F8F4EA;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;color:#3B5747;" onClick="{{ onCloseGallery }}">×</button>
+          <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.2rem;margin-bottom:16px;">{{ galleryData.title }}</h3>
+          <sc-if value="{{ galleryData.isEmpty }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:.9rem;color:#585448;">Todavía no hay fotos reales de esta actividad. La foto de portada es solo una imagen de referencia de la temática.</p>
+          </sc-if>
+          <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));">
+            <sc-for list="{{ galleryData.images }}" as="img" hint-placeholder-count="3">
+              <div style="border-radius:10px;overflow:hidden;position:relative;background:{{ img.bgUrl }} center/cover no-repeat;aspect-ratio:4/3;">
+                <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+                  <button aria-label="Eliminar foto" style="position:absolute;top:6px;right:6px;background:rgba(43,42,36,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:.8rem;cursor:pointer;" onClick="{{ img.onDelete }}">×</button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+            <label style="display:inline-block;margin-top:16px;background:#3B5747;color:#F8F4EA;font-size:.82rem;padding:9px 16px;border-radius:999px;cursor:pointer;font-family:'Karla',sans-serif;font-weight:600;">
+              + Agregar otra foto
+              <input type="file" accept="image/*" style="display:none;" onChange="{{ onGalleryAddPhoto }}">
+            </label>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
     <!-- ============ TAB: TESTIMONIOS ============ -->
     <sc-if value="{{ tabTestimonios }}" hint-placeholder-val="{{ false }}">
     <section style="animation:fadein .4s ease;padding:56px 0;">
-      <div style="max-width:60ch;margin-bottom:34px;">
-        <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Testimonios</span>
-        <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Historias de esperanza</h2>
-        <p style="max-width:60ch;">Estos son ejemplos de cómo podrían presentarse los testimonios. Reemplázalos con relatos e imágenes reales de las personas y familias acompañadas, siempre con su autorización.</p>
+      <div style="max-width:60ch;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;">
+        <div>
+          <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Testimonios</span>
+          <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Historias de esperanza</h2>
+          <p style="max-width:60ch;">Haz clic en una historia para ver el relato completo. Reemplaza los ejemplos con testimonios reales, siempre con autorización de la persona.</p>
+        </div>
+        <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+          <button style="background:#3B5747;color:#F8F4EA;border:none;border-radius:999px;padding:10px 18px;font-family:'Karla',sans-serif;font-weight:700;font-size:.84rem;cursor:pointer;white-space:nowrap;" onClick="{{ onNewTestimonial }}">+ Añadir testimonio</button>
+        </sc-if>
       </div>
+
+      <sc-if value="{{ testimonialFormOpenAdmin }}" hint-placeholder-val="{{ false }}">
+        <form style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:22px;margin-bottom:26px;display:grid;gap:10px;animation:fadein .3s ease;" onSubmit="{{ onSaveTestimonial }}">
+          <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.05rem;margin:0;">{{ testimonialFormTitle }}</h3>
+          <div style="display:grid;gap:10px;grid-template-columns:{{ grid2Cols }};">
+            <input required placeholder="Nombre o descripción (ej. Madre de familia)" value="{{ testimonialDraft.name }}" onChange="{{ onDraftChange.name }}" style="padding:10px 12px;border-radius:8px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.87rem;">
+            <input required placeholder="Programa (ej. Acompañamiento hospitalario)" value="{{ testimonialDraft.role }}" onChange="{{ onDraftChange.role }}" style="padding:10px 12px;border-radius:8px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.87rem;">
+          </div>
+          <textarea required placeholder="Frase corta y destacada del testimonio" rows="2" value="{{ testimonialDraft.quote }}" onChange="{{ onDraftChange.quote }}" style="padding:10px 12px;border-radius:8px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.87rem;resize:vertical;"></textarea>
+          <textarea placeholder="Historia completa (se muestra al hacer clic en la tarjeta)" rows="4" value="{{ testimonialDraft.detail }}" onChange="{{ onDraftChange.detail }}" style="padding:10px 12px;border-radius:8px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.87rem;resize:vertical;"></textarea>
+          <div style="display:flex;gap:10px;">
+            <button type="submit" style="background:#C79A3C;color:#2B2409;border:none;border-radius:999px;padding:10px 20px;font-family:'Karla',sans-serif;font-weight:700;font-size:.84rem;cursor:pointer;">Guardar</button>
+            <button type="button" style="background:#EFE7D6;color:#2B2A24;border:none;border-radius:999px;padding:10px 20px;font-family:'Karla',sans-serif;font-weight:700;font-size:.84rem;cursor:pointer;" onClick="{{ onCancelTestimonial }}">Cancelar</button>
+          </div>
+        </form>
+      </sc-if>
+
       <div style="display:grid;gap:22px;grid-template-columns:{{ grid3Cols }};">
-        <div style="background:#fff;border-radius:14px;padding:26px;border:1px solid rgba(43,42,36,0.12);">
-          <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">Ejemplo — reemplazar</span>
-          <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.05rem;">"Cuando mi hijo estaba en el hospital, la visita de la fundación fue un respiro de alegría en medio de tantos días difíciles."</p>
-          <div style="margin-top:14px;display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;">M</div><div><b style="display:block;font-size:.88rem;">Madre de familia</b><span style="font-size:.78rem;color:#585448;">Acompañamiento hospitalario</span></div></div>
-        </div>
-        <div style="background:#fff;border-radius:14px;padding:26px;border:1px solid rgba(43,42,36,0.12);">
-          <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">Ejemplo — reemplazar</span>
-          <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.05rem;">"Después de años sintiéndome sola en el asilo, ahora espero cada visita con el corazón lleno de ilusión."</p>
-          <div style="margin-top:14px;display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;">R</div><div><b style="display:block;font-size:.88rem;">Residente de un asilo</b><span style="font-size:.78rem;color:#585448;">Programa de adultos mayores</span></div></div>
-        </div>
-        <div style="background:#fff;border-radius:14px;padding:26px;border:1px solid rgba(43,42,36,0.12);">
-          <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">Ejemplo — reemplazar</span>
-          <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.05rem;">"La donación de mercados llegó justo cuando más lo necesitábamos. Sentimos que Dios no nos había olvidado."</p>
-          <div style="margin-top:14px;display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;">F</div><div><b style="display:block;font-size:.88rem;">Familia beneficiaria</b><span style="font-size:.78rem;color:#585448;">Donación de alimentos</span></div></div>
-        </div>
+        <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="3">
+          <div style="background:#fff;border-radius:14px;padding:26px;border:1px solid rgba(43,42,36,0.12);cursor:pointer;position:relative;" onClick="{{ t.onOpen }}">
+            <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:14px;right:14px;display:flex;gap:6px;">
+                <button aria-label="Editar" style="background:#F8F4EA;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:.75rem;" onClick="{{ t.onEdit }}">✎</button>
+                <button aria-label="Eliminar" style="background:#F8F4EA;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:.8rem;color:#C1704F;" onClick="{{ t.onDelete }}">×</button>
+              </div>
+            </sc-if>
+            <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">{{ t.tag }}</span>
+            <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.05rem;">"{{ t.quote }}"</p>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;flex-shrink:0;">{{ t.initial }}</div><div><b style="display:block;font-size:.88rem;">{{ t.name }}</b><span style="font-size:.78rem;color:#585448;">{{ t.role }}</span></div></div>
+            <sc-if value="{{ t.hasDetail }}" hint-placeholder-val="{{ false }}">
+              <span style="display:block;margin-top:12px;font-size:.78rem;font-weight:600;color:#3B5747;">Leer historia completa →</span>
+            </sc-if>
+          </div>
+        </sc-for>
       </div>
+
+      <sc-if value="{{ testimonialDetailShown }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;inset:0;background:rgba(43,42,36,.45);display:flex;align-items:center;justify-content:center;padding:24px;z-index:200;" onClick="{{ onCloseDetail }}">
+          <div style="background:#fff;border-radius:16px;padding:32px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;position:relative;" onClick="{{ stopPropagation }}">
+            <button aria-label="Cerrar" style="position:absolute;top:16px;right:16px;background:#F8F4EA;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;color:#3B5747;" onClick="{{ onCloseDetail }}">×</button>
+            <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">{{ testimonialDetail.tag }}</span>
+            <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.2rem;">"{{ testimonialDetail.quote }}"</p>
+            <p style="margin:16px 0;">{{ testimonialDetail.detail }}</p>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;flex-shrink:0;">{{ testimonialDetail.initial }}</div><div><b style="display:block;font-size:.88rem;">{{ testimonialDetail.name }}</b><span style="font-size:.78rem;color:#585448;">{{ testimonialDetail.role }}</span></div></div>
+          </div>
+        </div>
+      </sc-if>
     </section>
     </sc-if>
 
@@ -421,6 +467,10 @@
               <option>Quiero unirme al servicio</option>
             </select>
             <textarea name="mensaje" placeholder="Cuéntanos brevemente por qué quieres unirte" rows="3" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(43,42,36,0.12);font-family:'Karla',sans-serif;font-size:.9rem;background:#fff;"></textarea>
+            <label style="display:flex;gap:10px;align-items:flex-start;font-size:.8rem;color:#585448;">
+              <input type="checkbox" required style="margin-top:3px;">
+              <span>Autorizo el tratamiento de mis datos personales conforme a la <a href="#" style="color:#3B5747;font-weight:600;" onClick="{{ onOpenPrivacy }}">Política de Protección de Datos</a> de Un Nuevo Camino.</span>
+            </label>
             <button type="submit" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#3B5747;color:#F8F4EA;">Quiero ser voluntario/a</button>
           </form>
           <sc-if value="{{ volunteerSubmitted }}" hint-placeholder-val="{{ false }}">
@@ -448,6 +498,21 @@
 
   </main>
 
+  <sc-if value="{{ privacyOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:rgba(43,42,36,.45);display:flex;align-items:center;justify-content:center;padding:24px;z-index:200;" onClick="{{ onClosePrivacy }}">
+      <div style="background:#fff;border-radius:16px;padding:32px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;position:relative;animation:fadein .3s ease;" onClick="{{ stopPropagation }}">
+        <button aria-label="Cerrar" style="position:absolute;top:16px;right:16px;background:#F8F4EA;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;color:#3B5747;" onClick="{{ onClosePrivacy }}">×</button>
+        <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.2rem;">Política de Protección de Datos</h3>
+        <div style="font-size:.9rem;color:#2B2A24;display:grid;gap:10px;">
+          <p><b>Responsable del tratamiento:</b> Un Nuevo Camino recopila los datos que diligencias voluntariamente en los formularios de esta página (nombre, teléfono, correo, dirección) únicamente para gestionar tu vinculación como voluntario/a o coordinar la recogida de donaciones.</p>
+          <p><b>Finalidad:</b> Contactarte para coordinar actividades, jornadas, visitas o la logística de donación que solicitaste. No usamos tus datos con fines comerciales ni los vendemos ni los compartimos con terceros ajenos a la labor de la fundación.</p>
+          <p><b>Derechos:</b> Puedes solicitar en cualquier momento conocer, actualizar, rectificar o eliminar tus datos, escribiendo a nuestro correo de contacto.</p>
+          <p style="font-size:.78rem;color:#585448;">Este es un texto de referencia — reemplázalo por la política de protección de datos definitiva, revisada conforme a la normativa aplicable (Colombia: Ley 1581 de 2012), antes de publicar.</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
   <footer style="background:#2E4356;color:#B9C7D0;padding:40px 0 26px;margin-top:20px;">
     <div style="max-width:1120px;margin:0 auto;padding:0 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;align-items:flex-start;">
       <div>
@@ -465,7 +530,10 @@
         </ul>
       </div>
     </div>
-    <div style="max-width:1120px;margin:26px auto 0;padding:18px 28px 0;border-top:1px solid rgba(255,255,255,.12);font-size:.75rem;color:#8FA1AC;">© 2026 Un Nuevo Camino. Sitio de ejemplo — reemplaza los datos de contacto y bancarios antes de publicar.</div>
+    <div style="max-width:1120px;margin:26px auto 0;padding:18px 28px 0;border-top:1px solid rgba(255,255,255,.12);font-size:.75rem;color:#8FA1AC;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <span>© 2026 Un Nuevo Camino. Sitio de ejemplo — reemplaza los datos de contacto y bancarios antes de publicar.</span>
+      <button style="background:none;border:none;color:#8FA1AC;font-size:.75rem;cursor:pointer;text-decoration:underline;padding:0;" onClick="{{ onToggleAdmin }}">{{ adminToggleLabel }}</button>
+    </div>
   </footer>
 
 </div>
@@ -482,7 +550,7 @@ const FAITH_CAPSULES = [
 ];
 
 const JESUS_LIFE = [
-  'Jesús pasó gran parte de su vida pública recorriendo caminos: enseñaba en el camino, sanaba en el camino, se encontraba con la gente en el camino. Por eso Él mismo dijo: "Yo soy el camino, la verdad y la vida. Solamente por mí se puede llegar al Padre" (Juan 14:6, Dios Habla Hoy).',
+  'Jesús pasó gran parte de su vida pública recorriendo caminos: enseñaba en el camino, sanaba en el camino, se encontraba con la gente en el camino. Por eso Él mismo dijo: "Yo soy el camino, la verdad y la vida. Solamente por mí se puede llegar al Padre" (Juan 14,6, Dios Habla Hoy).',
   'Antes de comenzar su vida pública, Jesús vivió treinta años en Nazaret, en una familia sencilla de carpinteros, mostrando que la santidad también se vive en lo cotidiano.',
   'Jesús eligió a doce apóstoles, hombres comunes, para acompañarlo y continuar su misión — un recordatorio de que Dios llama a personas ordinarias para obras extraordinarias.',
   'Gran parte del ministerio de Jesús ocurrió compartiendo mesa con otros: comió con pecadores, celebró bodas y multiplicó panes, mostrando que el amor de Dios se vive en comunidad.'
@@ -495,6 +563,13 @@ const CULTURE_FACTS = [
   'La Iglesia Católica reconoce siete sacramentos: Bautismo, Confirmación, Eucaristía, Reconciliación, Unción de los Enfermos, Orden Sacerdotal y Matrimonio.',
   'El Catecismo de la Iglesia Católica, publicado en 1992, resume de forma ordenada la fe, los sacramentos, la moral y la oración cristiana.',
   'San Francisco de Asís es considerado patrono de los animales y la ecología; su amor por la creación sigue inspirando a millones hoy.'
+];
+
+const ACTIVITIES_META = [
+  { key: 'juguetes', title: 'Donación de juguetes', desc: 'Campañas de recolección y entrega de juguetes a niños hospitalizados y en comunidades vulnerables.', placeholder: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=60' },
+  { key: 'comida', title: 'Donación de comida', desc: 'Mercados y comidas preparadas entregadas puerta a puerta a familias de bajos recursos.', placeholder: 'https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?auto=format&fit=crop&w=800&q=60' },
+  { key: 'ropa', title: 'Donación de ropa', desc: 'Recolección de ropa en buen estado, clasificada y entregada según la necesidad de cada familia.', placeholder: 'https://images.unsplash.com/photo-1635274605638-d44babc08a4f?auto=format&fit=crop&w=800&q=60' },
+  { key: 'asilos', title: 'Acompañamiento en asilos', desc: 'Visitas periódicas para conversar, cantar y celebrar junto a nuestros adultos mayores.', placeholder: 'https://images.unsplash.com/photo-1554331292-735256644d5f?auto=format&fit=crop&w=800&q=60' }
 ];
 
 const SITUATIONS = [
@@ -514,132 +589,132 @@ const SITUATIONS = [
 
 const VERSE_LIBRARY = {
   triste: [
-    { ref: 'Salmo 34:18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón; él salva a los que han perdido toda esperanza.', reflexion: 'Tu tristeza no pasa desapercibida para Dios: él está más cerca de ti justo en este momento.' },
-    { ref: 'Mateo 5:4 (DHH)', cita: 'Dichosos los que ahora lloran, porque Dios los consolará.', reflexion: 'El llanto no es debilidad; es el camino por el que Dios promete traer consuelo.' },
-    { ref: 'Salmo 30:5 (DHH)', cita: 'Si de noche hay llanto, de día hay alegría.', reflexion: 'La tristeza de hoy no es la última palabra — confía en que Dios trae nuevas mañanas.' },
-    { ref: 'Salmo 42:11 (DHH)', cita: '¿Por qué te entristeces, alma mía? Espera en Dios, porque volveré a alabarlo.', reflexion: 'Hablarle a tu propia alma con esperanza es también un acto de fe.' },
-    { ref: 'Juan 16:22 (DHH)', cita: 'Volveré a verlos, y su corazón se alegrará, y nadie les quitará esa alegría.', reflexion: 'La alegría que Dios promete no depende de las circunstancias — es una alegría que permanece.' }
+    { ref: 'Salmo 34,18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón; él salva a los que han perdido toda esperanza.', reflexion: 'Tu tristeza no pasa desapercibida para Dios: él está más cerca de ti justo en este momento.' },
+    { ref: 'Mateo 5,4 (DHH)', cita: 'Dichosos los que ahora lloran, porque Dios los consolará.', reflexion: 'El llanto no es debilidad; es el camino por el que Dios promete traer consuelo.' },
+    { ref: 'Salmo 30,5 (DHH)', cita: 'Si de noche hay llanto, de día hay alegría.', reflexion: 'La tristeza de hoy no es la última palabra — confía en que Dios trae nuevas mañanas.' },
+    { ref: 'Salmo 42,11 (DHH)', cita: '¿Por qué te entristeces, alma mía? Espera en Dios, porque volveré a alabarlo.', reflexion: 'Hablarle a tu propia alma con esperanza es también un acto de fe.' },
+    { ref: 'Juan 16,22 (DHH)', cita: 'Volveré a verlos, y su corazón se alegrará, y nadie les quitará esa alegría.', reflexion: 'La alegría que Dios promete no depende de las circunstancias — es una alegría que permanece.' }
   ],
   miedo: [
-    { ref: 'Isaías 41:10 (DHH)', cita: 'No temas, porque yo estoy contigo; yo te fortalezco y te ayudo.', reflexion: 'El miedo se enfrenta mejor sabiendo que no caminas sola/o: Dios va contigo.' },
-    { ref: 'Filipenses 4:6-7 (DHH)', cita: 'No se aflijan por nada; preséntenle a Dios sus peticiones, y la paz de Dios cuidará su corazón.', reflexion: 'Entregar la preocupación en oración abre espacio para que la paz de Dios entre.' },
-    { ref: '2 Timoteo 1:7 (DHH)', cita: 'Dios no nos ha dado un espíritu de cobardía, sino de poder, amor y dominio propio.', reflexion: 'El temor no define quién eres; Dios te ha dado fuerza para enfrentar lo que viene.' },
-    { ref: 'Salmo 27:1 (DHH)', cita: 'El Señor es mi luz y mi salvación; ¿a quién voy a tenerle miedo?', reflexion: 'Cuando Dios es tu punto de apoyo, el futuro deja de ser una amenaza.' },
-    { ref: 'Mateo 6:34 (DHH)', cita: 'No se angustien por el día de mañana, que el mañana traerá su propia angustia.', reflexion: 'Vivir un día a la vez, confiado en Dios, alivia el peso de lo que aún no llega.' }
+    { ref: 'Isaías 41,10 (DHH)', cita: 'No temas, porque yo estoy contigo; yo te fortalezco y te ayudo.', reflexion: 'El miedo se enfrenta mejor sabiendo que no caminas sola/o: Dios va contigo.' },
+    { ref: 'Filipenses 4,6-7 (DHH)', cita: 'No se aflijan por nada; preséntenle a Dios sus peticiones, y la paz de Dios cuidará su corazón.', reflexion: 'Entregar la preocupación en oración abre espacio para que la paz de Dios entre.' },
+    { ref: '2 Timoteo 1,7 (DHH)', cita: 'Dios no nos ha dado un espíritu de cobardía, sino de poder, amor y dominio propio.', reflexion: 'El temor no define quién eres; Dios te ha dado fuerza para enfrentar lo que viene.' },
+    { ref: 'Salmo 27,1 (DHH)', cita: 'El Señor es mi luz y mi salvación; ¿a quién voy a tenerle miedo?', reflexion: 'Cuando Dios es tu punto de apoyo, el futuro deja de ser una amenaza.' },
+    { ref: 'Mateo 6,34 (DHH)', cita: 'No se angustien por el día de mañana, que el mañana traerá su propia angustia.', reflexion: 'Vivir un día a la vez, confiado en Dios, alivia el peso de lo que aún no llega.' }
   ],
   pareja: [
-    { ref: '1 Corintios 13:4-5 (DHH)', cita: 'El amor es paciente y bondadoso; no es egoísta ni se comporta con rudeza.', reflexion: 'Elegir bien empieza por reconocer este tipo de amor: paciente, humilde y generoso.' },
-    { ref: 'Filipenses 4:8 (DHH)', cita: 'Consideren bien todo lo verdadero, todo lo honesto, todo lo justo, todo lo puro.', reflexion: 'Al discernir una relación, mira si te acerca a lo que es verdadero, honesto y puro.' },
-    { ref: 'Proverbios 31:30 (DHH)', cita: 'Engañoso es el encanto y pasajera la belleza; la mujer que teme al Señor merece ser alabada.', reflexion: 'Más allá de la atracción, busca en la otra persona una fe y un carácter que perduren.' },
-    { ref: 'Eclesiastés 4:9-10 (DHH)', cita: 'Vale más estar acompañado que solo, pues si uno cae, el otro lo levanta.', reflexion: 'Busca a alguien que te ayude a levantarte, no solo a quien te acompañe en lo fácil.' },
-    { ref: '2 Corintios 6:14 (DHH)', cita: 'No formen yunta con los incrédulos, pues la luz y la oscuridad no tienen nada en común.', reflexion: 'Compartir la fe con tu pareja es una base que sostiene la relación en el tiempo.' }
+    { ref: '1 Corintios 13,4-5 (DHH)', cita: 'El amor es paciente y bondadoso; no es egoísta ni se comporta con rudeza.', reflexion: 'Elegir bien empieza por reconocer este tipo de amor: paciente, humilde y generoso.' },
+    { ref: 'Filipenses 4,8 (DHH)', cita: 'Consideren bien todo lo verdadero, todo lo honesto, todo lo justo, todo lo puro.', reflexion: 'Al discernir una relación, mira si te acerca a lo que es verdadero, honesto y puro.' },
+    { ref: 'Proverbios 31,30 (DHH)', cita: 'Engañoso es el encanto y pasajera la belleza; la mujer que teme al Señor merece ser alabada.', reflexion: 'Más allá de la atracción, busca en la otra persona una fe y un carácter que perduren.' },
+    { ref: 'Eclesiastés 4,9-10 (DHH)', cita: 'Vale más estar acompañado que solo, pues si uno cae, el otro lo levanta.', reflexion: 'Busca a alguien que te ayude a levantarte, no solo a quien te acompañe en lo fácil.' },
+    { ref: '2 Corintios 6,14 (DHH)', cita: 'No formen yunta con los incrédulos, pues la luz y la oscuridad no tienen nada en común.', reflexion: 'Compartir la fe con tu pareja es una base que sostiene la relación en el tiempo.' }
   ],
   fidelidad: [
-    { ref: '1 Corintios 10:13 (DHH)', cita: 'Dios les ayudará a soportar la tentación, y les mostrará cómo pueden salir de ella.', reflexion: 'La tentación no te condena; Dios ya tiene preparada una salida si la buscas.' },
-    { ref: 'Mateo 26:41 (DHH)', cita: 'Vigilen y oren, para que no caigan en tentación.', reflexion: 'La oración y la vigilancia diaria son el escudo más firme contra la infidelidad.' },
-    { ref: 'Hebreos 13:4 (DHH)', cita: 'Que todos respeten el matrimonio y que los esposos se sean fieles.', reflexion: 'La fidelidad se protege cuidando pequeñas decisiones antes de que se vuelvan grandes.' },
-    { ref: 'Proverbios 4:23 (DHH)', cita: 'Cuida tu corazón más que ninguna otra cosa, porque de él mana la vida.', reflexion: 'Lo que permites entrar al corazón termina por definir tus decisiones — cuídalo primero.' },
-    { ref: 'Santiago 1:14-15 (DHH)', cita: 'Cada uno es tentado cuando se deja llevar por sus propios malos deseos.', reflexion: 'Reconocer a tiempo el primer paso hacia la tentación es la mejor forma de evitarla.' }
+    { ref: '1 Corintios 10,13 (DHH)', cita: 'Dios les ayudará a soportar la tentación, y les mostrará cómo pueden salir de ella.', reflexion: 'La tentación no te condena; Dios ya tiene preparada una salida si la buscas.' },
+    { ref: 'Mateo 26,41 (DHH)', cita: 'Vigilen y oren, para que no caigan en tentación.', reflexion: 'La oración y la vigilancia diaria son el escudo más firme contra la infidelidad.' },
+    { ref: 'Hebreos 13,4 (DHH)', cita: 'Que todos respeten el matrimonio y que los esposos se sean fieles.', reflexion: 'La fidelidad se protege cuidando pequeñas decisiones antes de que se vuelvan grandes.' },
+    { ref: 'Proverbios 4,23 (DHH)', cita: 'Cuida tu corazón más que ninguna otra cosa, porque de él mana la vida.', reflexion: 'Lo que permites entrar al corazón termina por definir tus decisiones — cuídalo primero.' },
+    { ref: 'Santiago 1,14-15 (DHH)', cita: 'Cada uno es tentado cuando se deja llevar por sus propios malos deseos.', reflexion: 'Reconocer a tiempo el primer paso hacia la tentación es la mejor forma de evitarla.' }
   ],
   cercania: [
-    { ref: 'Santiago 4:8 (DHH)', cita: 'Acérquense a Dios, y él se acercará a ustedes.', reflexion: 'Basta un paso sincero hacia Dios cada día para que la cercanía crezca.' },
-    { ref: 'Salmo 145:18 (DHH)', cita: 'El Señor está cerca de todos los que lo invocan de veras.', reflexion: 'No necesitas palabras perfectas: una oración honesta ya te acerca a Dios.' },
-    { ref: 'Jeremías 29:13 (DHH)', cita: 'Me buscarán, y me encontrarán, si me buscan de todo corazón.', reflexion: 'La cercanía con Dios es una búsqueda diaria, no un logro de un solo día.' },
-    { ref: 'Salmo 16:11 (DHH)', cita: 'Me has enseñado el camino de la vida; en tu presencia hay plenitud de alegría.', reflexion: 'La verdadera alegría se encuentra al hacer de la presencia de Dios un hábito diario.' },
-    { ref: 'Mateo 6:6 (DHH)', cita: 'Entra en tu cuarto, cierra la puerta y ora a tu Padre que está en secreto.', reflexion: 'Un espacio breve y silencioso al día puede transformar tu relación con Dios.' }
+    { ref: 'Santiago 4,8 (DHH)', cita: 'Acérquense a Dios, y él se acercará a ustedes.', reflexion: 'Basta un paso sincero hacia Dios cada día para que la cercanía crezca.' },
+    { ref: 'Salmo 145,18 (DHH)', cita: 'El Señor está cerca de todos los que lo invocan de veras.', reflexion: 'No necesitas palabras perfectas: una oración honesta ya te acerca a Dios.' },
+    { ref: 'Jeremías 29,13 (DHH)', cita: 'Me buscarán, y me encontrarán, si me buscan de todo corazón.', reflexion: 'La cercanía con Dios es una búsqueda diaria, no un logro de un solo día.' },
+    { ref: 'Salmo 16,11 (DHH)', cita: 'Me has enseñado el camino de la vida; en tu presencia hay plenitud de alegría.', reflexion: 'La verdadera alegría se encuentra al hacer de la presencia de Dios un hábito diario.' },
+    { ref: 'Mateo 6,6 (DHH)', cita: 'Entra en tu cuarto, cierra la puerta y ora a tu Padre que está en secreto.', reflexion: 'Un espacio breve y silencioso al día puede transformar tu relación con Dios.' }
   ],
   perdon: [
-    { ref: 'Efesios 4:32 (DHH)', cita: 'Perdónense unos a otros, como Dios los perdonó a ustedes por medio de Cristo.', reflexion: 'Perdonar no borra el daño, pero libera tu corazón siguiendo el ejemplo de Dios.' },
-    { ref: 'Mateo 6:14 (DHH)', cita: 'Si perdonan a otros sus ofensas, también su Padre celestial los perdonará a ustedes.', reflexion: 'El perdón que das y el que recibes están unidos — pide fuerzas para dar el primer paso.' },
-    { ref: 'Colosenses 3:13 (DHH)', cita: 'Sopórtense y perdónense unos a otros, así como el Señor los perdonó.', reflexion: 'Perdonar es un proceso; puedes pedirle a Dios fuerzas cada vez que lo necesites.' },
-    { ref: 'Lucas 6:37 (DHH)', cita: 'Perdonen, y serán perdonados.', reflexion: 'Perdonar a otros abre en ti el mismo espacio de misericordia que necesitas recibir.' },
-    { ref: 'Salmo 103:12 (DHH)', cita: 'Tan lejos de nosotros echa nuestras rebeliones como lejos del oriente está el occidente.', reflexion: 'Si Dios perdona así, también puedes aprender a soltar lo que otros te hicieron.' }
+    { ref: 'Efesios 4,32 (DHH)', cita: 'Perdónense unos a otros, como Dios los perdonó a ustedes por medio de Cristo.', reflexion: 'Perdonar no borra el daño, pero libera tu corazón siguiendo el ejemplo de Dios.' },
+    { ref: 'Mateo 6,14 (DHH)', cita: 'Si perdonan a otros sus ofensas, también su Padre celestial los perdonará a ustedes.', reflexion: 'El perdón que das y el que recibes están unidos — pide fuerzas para dar el primer paso.' },
+    { ref: 'Colosenses 3,13 (DHH)', cita: 'Sopórtense y perdónense unos a otros, así como el Señor los perdonó.', reflexion: 'Perdonar es un proceso; puedes pedirle a Dios fuerzas cada vez que lo necesites.' },
+    { ref: 'Lucas 6,37 (DHH)', cita: 'Perdonen, y serán perdonados.', reflexion: 'Perdonar a otros abre en ti el mismo espacio de misericordia que necesitas recibir.' },
+    { ref: 'Salmo 103,12 (DHH)', cita: 'Tan lejos de nosotros echa nuestras rebeliones como lejos del oriente está el occidente.', reflexion: 'Si Dios perdona así, también puedes aprender a soltar lo que otros te hicieron.' }
   ],
   duelo: [
-    { ref: 'Salmo 34:18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón.', reflexion: 'En medio de la pérdida, no estás solo/a — Dios acompaña tu dolor.' },
-    { ref: 'Apocalipsis 21:4 (DHH)', cita: 'Dios secará las lágrimas de sus ojos, y ya no habrá muerte ni llanto.', reflexion: 'La esperanza cristiana no niega el dolor, pero promete que no será eterno.' },
-    { ref: 'Juan 11:25 (DHH)', cita: 'Jesús dijo: Yo soy la resurrección y la vida.', reflexion: 'Quien ha partido en la fe no está perdido para siempre — hay esperanza más allá del duelo.' },
-    { ref: '1 Tesalonicenses 4:13 (DHH)', cita: 'No quiero que estén tristes como los que no tienen esperanza.', reflexion: 'El duelo cristiano se vive con lágrimas reales, pero sostenidas por la esperanza.' },
-    { ref: 'Salmo 23:4 (DHH)', cita: 'Aunque pase por el valle más oscuro, no temeré, porque tú estás conmigo.', reflexion: 'Dios no evita el valle, pero promete atravesarlo contigo.' }
+    { ref: 'Salmo 34,18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón.', reflexion: 'En medio de la pérdida, no estás solo/a — Dios acompaña tu dolor.' },
+    { ref: 'Apocalipsis 21,4 (DHH)', cita: 'Dios secará las lágrimas de sus ojos, y ya no habrá muerte ni llanto.', reflexion: 'La esperanza cristiana no niega el dolor, pero promete que no será eterno.' },
+    { ref: 'Juan 11,25 (DHH)', cita: 'Jesús dijo: Yo soy la resurrección y la vida.', reflexion: 'Quien ha partido en la fe no está perdido para siempre — hay esperanza más allá del duelo.' },
+    { ref: '1 Tesalonicenses 4,13 (DHH)', cita: 'No quiero que estén tristes como los que no tienen esperanza.', reflexion: 'El duelo cristiano se vive con lágrimas reales, pero sostenidas por la esperanza.' },
+    { ref: 'Salmo 23,4 (DHH)', cita: 'Aunque pase por el valle más oscuro, no temeré, porque tú estás conmigo.', reflexion: 'Dios no evita el valle, pero promete atravesarlo contigo.' }
   ],
   virtud: [
-    { ref: 'Miqueas 6:8 (DHH)', cita: 'Lo que el Señor pide de ti: que hagas justicia, ames la misericordia y camines humildemente con tu Dios.', reflexion: 'Crecer en virtud es tan simple —y tan exigente— como vivir estas tres cosas cada día.' },
-    { ref: 'Filipenses 4:13 (DHH)', cita: 'Todo lo puedo en Cristo que me fortalece.', reflexion: 'El cambio verdadero no depende solo de tu esfuerzo, sino de la fuerza que Dios te da.' },
-    { ref: 'Gálatas 5:22-23 (DHH)', cita: 'El fruto del Espíritu es amor, alegría, paz, paciencia, bondad, fidelidad y dominio propio.', reflexion: 'Estas son las señales de que vas creciendo — no de golpe, sino como un fruto que madura.' },
-    { ref: 'Romanos 12:2 (DHH)', cita: 'No vivan según los criterios de este mundo; dejen que Dios los transforme.', reflexion: 'Crecer en virtud es dejar que Dios vaya renovando poco a poco tu manera de pensar.' },
-    { ref: 'Proverbios 4:18 (DHH)', cita: 'La senda de los justos es como la luz de la aurora, que va en aumento hasta el pleno día.', reflexion: 'El crecimiento espiritual es gradual — no te desanimes si el progreso es lento.' }
+    { ref: 'Miqueas 6,8 (DHH)', cita: 'Lo que el Señor pide de ti: que hagas justicia, ames la misericordia y camines humildemente con tu Dios.', reflexion: 'Crecer en virtud es tan simple —y tan exigente— como vivir estas tres cosas cada día.' },
+    { ref: 'Filipenses 4,13 (DHH)', cita: 'Todo lo puedo en Cristo que me fortalece.', reflexion: 'El cambio verdadero no depende solo de tu esfuerzo, sino de la fuerza que Dios te da.' },
+    { ref: 'Gálatas 5,22-23 (DHH)', cita: 'El fruto del Espíritu es amor, alegría, paz, paciencia, bondad, fidelidad y dominio propio.', reflexion: 'Estas son las señales de que vas creciendo — no de golpe, sino como un fruto que madura.' },
+    { ref: 'Romanos 12,2 (DHH)', cita: 'No vivan según los criterios de este mundo; dejen que Dios los transforme.', reflexion: 'Crecer en virtud es dejar que Dios vaya renovando poco a poco tu manera de pensar.' },
+    { ref: 'Proverbios 4,18 (DHH)', cita: 'La senda de los justos es como la luz de la aurora, que va en aumento hasta el pleno día.', reflexion: 'El crecimiento espiritual es gradual — no te desanimes si el progreso es lento.' }
   ],
   enfermedad: [
-    { ref: 'Salmo 41:3 (DHH)', cita: 'El Señor lo sostendrá en el lecho del dolor y lo hará recobrar la salud.', reflexion: 'Aun en la enfermedad más difícil, Dios sostiene a quien sufre y no lo abandona.' },
-    { ref: 'Salmo 23:4 (DHH)', cita: 'Aunque pase por el valle más oscuro, no temeré, porque tú estás conmigo.', reflexion: 'El diagnóstico más duro no tiene la última palabra cuando Dios camina contigo.' },
-    { ref: '2 Corintios 12:9 (DHH)', cita: 'Te basta con mi amor; mi poder se muestra más cuando tú eres más débil.', reflexion: 'La debilidad del cuerpo puede ser el espacio donde la gracia de Dios se hace más visible.' },
-    { ref: 'Santiago 5:14-15 (DHH)', cita: 'Que llame a los ancianos de la iglesia para que oren por él.', reflexion: 'No enfrentes la enfermedad en soledad — la oración de otros también sostiene.' },
-    { ref: 'Apocalipsis 21:4 (DHH)', cita: 'Ya no habrá muerte, ni llanto, ni dolor, porque todo lo antiguo dejará de existir.', reflexion: 'La fe no elimina el sufrimiento presente, pero sostiene la esperanza de una vida sin él.' }
+    { ref: 'Salmo 41,3 (DHH)', cita: 'El Señor lo sostendrá en el lecho del dolor y lo hará recobrar la salud.', reflexion: 'Aun en la enfermedad más difícil, Dios sostiene a quien sufre y no lo abandona.' },
+    { ref: 'Salmo 23,4 (DHH)', cita: 'Aunque pase por el valle más oscuro, no temeré, porque tú estás conmigo.', reflexion: 'El diagnóstico más duro no tiene la última palabra cuando Dios camina contigo.' },
+    { ref: '2 Corintios 12,9 (DHH)', cita: 'Te basta con mi amor; mi poder se muestra más cuando tú eres más débil.', reflexion: 'La debilidad del cuerpo puede ser el espacio donde la gracia de Dios se hace más visible.' },
+    { ref: 'Santiago 5,14-15 (DHH)', cita: 'Que llame a los ancianos de la iglesia para que oren por él.', reflexion: 'No enfrentes la enfermedad en soledad — la oración de otros también sostiene.' },
+    { ref: 'Apocalipsis 21,4 (DHH)', cita: 'Ya no habrá muerte, ni llanto, ni dolor, porque todo lo antiguo dejará de existir.', reflexion: 'La fe no elimina el sufrimiento presente, pero sostiene la esperanza de una vida sin él.' }
   ],
   depresion: [
-    { ref: 'Salmo 42:5 (DHH)', cita: '¿Por qué te deprimes, alma mía? Espera en Dios, porque volveré a alabarlo.', reflexion: 'Hablarle a tu propia alma con esperanza, aunque no lo sientas todavía, es un acto de fe.' },
-    { ref: 'Salmo 34:18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón.', reflexion: 'La oscuridad que sientes no aleja a Dios de ti — él permanece cerca en el silencio.' },
-    { ref: 'Isaías 61:3 (DHH)', cita: 'Les dará alegría en lugar de luto, y cantos de alabanza en lugar de tristeza.', reflexion: 'Dios promete un cambio real, aunque hoy parezca lejano — sigue dando pasos pequeños.' },
-    { ref: '1 Pedro 5:7 (DHH)', cita: 'Pongan en las manos de Dios todas sus preocupaciones, porque él tiene cuidado de ustedes.', reflexion: 'No tienes que cargar solo/a este peso — Dios y las personas de confianza pueden sostenerlo contigo.' },
-    { ref: 'Mateo 11:28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'El descanso que ofrece Jesús no reemplaza la ayuda profesional, pero acompaña el proceso.' }
+    { ref: 'Salmo 42,5 (DHH)', cita: '¿Por qué te deprimes, alma mía? Espera en Dios, porque volveré a alabarlo.', reflexion: 'Hablarle a tu propia alma con esperanza, aunque no lo sientas todavía, es un acto de fe.' },
+    { ref: 'Salmo 34,18 (DHH)', cita: 'El Señor está cerca de los que tienen roto el corazón.', reflexion: 'La oscuridad que sientes no aleja a Dios de ti — él permanece cerca en el silencio.' },
+    { ref: 'Isaías 61,3 (DHH)', cita: 'Les dará alegría en lugar de luto, y cantos de alabanza en lugar de tristeza.', reflexion: 'Dios promete un cambio real, aunque hoy parezca lejano — sigue dando pasos pequeños.' },
+    { ref: '1 Pedro 5,7 (DHH)', cita: 'Pongan en las manos de Dios todas sus preocupaciones, porque él tiene cuidado de ustedes.', reflexion: 'No tienes que cargar solo/a este peso — Dios y las personas de confianza pueden sostenerlo contigo.' },
+    { ref: 'Mateo 11,28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'El descanso que ofrece Jesús no reemplaza la ayuda profesional, pero acompaña el proceso.' }
   ],
   vicios: [
-    { ref: '1 Corintios 6:12 (DHH)', cita: 'Todo me está permitido, pero no todo me conviene; no dejaré que nada me domine.', reflexion: 'La libertad verdadera no es hacer lo que se quiere, sino no estar esclavizado por nada.' },
-    { ref: '1 Corintios 10:13 (DHH)', cita: 'Dios les ayudará a soportar la tentación, y les mostrará cómo pueden salir de ella.', reflexion: 'Cada vez que sientas la tentación, recuerda que Dios ya tiene preparada una salida.' },
-    { ref: 'Gálatas 5:1 (DHH)', cita: 'Cristo nos hizo libres; manténganse, pues, firmes y no se sometan de nuevo a la esclavitud.', reflexion: 'Cada recaída no borra el camino recorrido — vuelve a levantarte hacia la libertad.' },
-    { ref: 'Romanos 12:2 (DHH)', cita: 'No vivan según los criterios de este mundo; dejen que Dios los transforme, renovando su mente.', reflexion: 'Cambiar un hábito empieza por cambiar lo que alimenta la mente cada día.' },
-    { ref: 'Filipenses 4:13 (DHH)', cita: 'Todo lo puedo en Cristo que me fortalece.', reflexion: 'Dejar un vicio no depende solo de tu voluntad — pide la fuerza de Dios cada día, un día a la vez.' }
+    { ref: '1 Corintios 6,12 (DHH)', cita: 'Todo me está permitido, pero no todo me conviene; no dejaré que nada me domine.', reflexion: 'La libertad verdadera no es hacer lo que se quiere, sino no estar esclavizado por nada.' },
+    { ref: '1 Corintios 10,13 (DHH)', cita: 'Dios les ayudará a soportar la tentación, y les mostrará cómo pueden salir de ella.', reflexion: 'Cada vez que sientas la tentación, recuerda que Dios ya tiene preparada una salida.' },
+    { ref: 'Gálatas 5,1 (DHH)', cita: 'Cristo nos hizo libres; manténganse, pues, firmes y no se sometan de nuevo a la esclavitud.', reflexion: 'Cada recaída no borra el camino recorrido — vuelve a levantarte hacia la libertad.' },
+    { ref: 'Romanos 12,2 (DHH)', cita: 'No vivan según los criterios de este mundo; dejen que Dios los transforme, renovando su mente.', reflexion: 'Cambiar un hábito empieza por cambiar lo que alimenta la mente cada día.' },
+    { ref: 'Filipenses 4,13 (DHH)', cita: 'Todo lo puedo en Cristo que me fortalece.', reflexion: 'Dejar un vicio no depende solo de tu voluntad — pide la fuerza de Dios cada día, un día a la vez.' }
   ],
   relacion: [
-    { ref: '1 Corintios 13:4-7 (DHH)', cita: 'El amor es paciente, es bondadoso, no guarda rencor y todo lo soporta.', reflexion: 'Fortalecer una relación es practicar este amor concreto, día a día, en lo pequeño.' },
-    { ref: 'Colosenses 3:13-14 (DHH)', cita: 'Sopórtense y perdónense unos a otros; por encima de todo, vístanse de amor.', reflexion: 'Toda relación duradera necesita paciencia y disposición a perdonar una y otra vez.' },
-    { ref: 'Eclesiastés 4:9-12 (DHH)', cita: 'Dos que están juntos pueden calentarse; uno solo, ¿cómo va a calentarse?', reflexion: 'Cuidar la cercanía y el tiempo compartido sostiene lo que la rutina desgasta.' },
-    { ref: 'Efesios 4:2-3 (DHH)', cita: 'Sopórtense unos a otros con amor, esforzándose por mantener la unidad.', reflexion: 'La unidad no es ausencia de conflicto, sino el esfuerzo constante por seguir juntos.' },
-    { ref: 'Filipenses 2:3-4 (DHH)', cita: 'No hagan nada por rivalidad; que cada uno mire por los intereses de los demás.', reflexion: 'Poner al otro primero, aunque cueste, es lo que hace crecer una relación con el tiempo.' }
+    { ref: '1 Corintios 13,4-7 (DHH)', cita: 'El amor es paciente, es bondadoso, no guarda rencor y todo lo soporta.', reflexion: 'Fortalecer una relación es practicar este amor concreto, día a día, en lo pequeño.' },
+    { ref: 'Colosenses 3,13-14 (DHH)', cita: 'Sopórtense y perdónense unos a otros; por encima de todo, vístanse de amor.', reflexion: 'Toda relación duradera necesita paciencia y disposición a perdonar una y otra vez.' },
+    { ref: 'Eclesiastés 4,9-12 (DHH)', cita: 'Dos que están juntos pueden calentarse; uno solo, ¿cómo va a calentarse?', reflexion: 'Cuidar la cercanía y el tiempo compartido sostiene lo que la rutina desgasta.' },
+    { ref: 'Efesios 4,2-3 (DHH)', cita: 'Sopórtense unos a otros con amor, esforzándose por mantener la unidad.', reflexion: 'La unidad no es ausencia de conflicto, sino el esfuerzo constante por seguir juntos.' },
+    { ref: 'Filipenses 2,3-4 (DHH)', cita: 'No hagan nada por rivalidad; que cada uno mire por los intereses de los demás.', reflexion: 'Poner al otro primero, aunque cueste, es lo que hace crecer una relación con el tiempo.' }
   ],
   general: [
-    { ref: 'Salmo 46:1 (DHH)', cita: 'Dios es nuestro refugio y nuestra fortaleza; nuestra ayuda segura en momentos de angustia.', reflexion: 'Sea lo que sea que estés viviendo, Dios sigue siendo tu refugio seguro.' },
-    { ref: 'Romanos 8:28 (DHH)', cita: 'Dios hace que todas las cosas ayuden para bien a los que lo aman.', reflexion: 'Aun en lo que no entiendes, puedes confiar en que Dios sigue trabajando por tu bien.' },
-    { ref: 'Josué 1:9 (DHH)', cita: 'No temas ni desmayes, porque el Señor tu Dios estará contigo en todo lo que hagas.', reflexion: 'No importa la situación que enfrentes hoy: no la enfrentas sola/o.' },
-    { ref: 'Salmo 55:22 (DHH)', cita: 'Pon tus cargas en las manos del Señor, y él te sustentará.', reflexion: 'No fuiste hecho/a para cargar solo/a lo que hoy te pesa.' },
-    { ref: 'Mateo 11:28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'Cualquiera que sea tu cansancio hoy, hay una invitación abierta a encontrar descanso en Dios.' }
+    { ref: 'Salmo 46,1 (DHH)', cita: 'Dios es nuestro refugio y nuestra fortaleza; nuestra ayuda segura en momentos de angustia.', reflexion: 'Sea lo que sea que estés viviendo, Dios sigue siendo tu refugio seguro.' },
+    { ref: 'Romanos 8,28 (DHH)', cita: 'Dios hace que todas las cosas ayuden para bien a los que lo aman.', reflexion: 'Aun en lo que no entiendes, puedes confiar en que Dios sigue trabajando por tu bien.' },
+    { ref: 'Josué 1,9 (DHH)', cita: 'No temas ni desmayes, porque el Señor tu Dios estará contigo en todo lo que hagas.', reflexion: 'No importa la situación que enfrentes hoy: no la enfrentas sola/o.' },
+    { ref: 'Salmo 55,22 (DHH)', cita: 'Pon tus cargas en las manos del Señor, y él te sustentará.', reflexion: 'No fuiste hecho/a para cargar solo/a lo que hoy te pesa.' },
+    { ref: 'Mateo 11,28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'Cualquiera que sea tu cansancio hoy, hay una invitación abierta a encontrar descanso en Dios.' }
   ],
   soledad: [
-    { ref: 'Salmo 68:6 (DHH)', cita: 'Dios da un hogar a los desamparados.', reflexion: 'Aun cuando sientas que nadie te acompaña, Dios te ofrece un lugar de pertenencia.' },
-    { ref: 'Deuteronomio 31:6 (DHH)', cita: 'El Señor tu Dios va contigo; no te dejará ni te abandonará.', reflexion: 'La soledad que sientes no es la verdad final: Dios permanece contigo aunque no lo veas.' },
-    { ref: 'Hebreos 13:5 (DHH)', cita: 'Nunca los dejaré ni los abandonaré.', reflexion: 'Esta promesa es para hoy, no solo para los momentos fáciles.' }
+    { ref: 'Salmo 68,6 (DHH)', cita: 'Dios da un hogar a los desamparados.', reflexion: 'Aun cuando sientas que nadie te acompaña, Dios te ofrece un lugar de pertenencia.' },
+    { ref: 'Deuteronomio 31,6 (DHH)', cita: 'El Señor tu Dios va contigo; no te dejará ni te abandonará.', reflexion: 'La soledad que sientes no es la verdad final: Dios permanece contigo aunque no lo veas.' },
+    { ref: 'Hebreos 13,5 (DHH)', cita: 'Nunca los dejaré ni los abandonaré.', reflexion: 'Esta promesa es para hoy, no solo para los momentos fáciles.' }
   ],
   trabajo: [
-    { ref: 'Colosenses 3:23 (DHH)', cita: 'Todo lo que hagan, háganlo de buena gana, como si estuvieran sirviendo al Señor.', reflexion: 'Ofrecer tu trabajo a Dios cambia el sentido del esfuerzo diario, aun en medio del estrés.' },
-    { ref: 'Filipenses 4:6 (DHH)', cita: 'No se aflijan por nada; preséntenle a Dios sus peticiones con acción de gracias.', reflexion: 'La incertidumbre laboral se lleva mejor cuando se comparte con Dios en oración.' },
-    { ref: 'Salmo 90:17 (DHH)', cita: 'Haz prosperar la obra de nuestras manos.', reflexion: 'Puedes pedirle a Dios que acompañe tu esfuerzo, no solo el resultado final.' }
+    { ref: 'Colosenses 3,23 (DHH)', cita: 'Todo lo que hagan, háganlo de buena gana, como si estuvieran sirviendo al Señor.', reflexion: 'Ofrecer tu trabajo a Dios cambia el sentido del esfuerzo diario, aun en medio del estrés.' },
+    { ref: 'Filipenses 4,6 (DHH)', cita: 'No se aflijan por nada; preséntenle a Dios sus peticiones con acción de gracias.', reflexion: 'La incertidumbre laboral se lleva mejor cuando se comparte con Dios en oración.' },
+    { ref: 'Salmo 90,17 (DHH)', cita: 'Haz prosperar la obra de nuestras manos.', reflexion: 'Puedes pedirle a Dios que acompañe tu esfuerzo, no solo el resultado final.' }
   ],
   familia: [
-    { ref: 'Romanos 12:18 (DHH)', cita: 'Estén en paz con todos, en cuanto dependa de ustedes.', reflexion: 'No siempre está en tus manos evitar el conflicto, pero sí buscar la paz de tu parte.' },
-    { ref: 'Efesios 4:26 (DHH)', cita: 'Si se enojan, no pequen; no dejen que el enojo les dure hasta la puesta del sol.', reflexion: 'Las discusiones familiares duelen menos cuando no se dejan crecer con el tiempo.' },
-    { ref: 'Colosenses 3:13 (DHH)', cita: 'Sopórtense y perdónense unos a otros, así como el Señor los perdonó.', reflexion: 'La familia se sostiene con paciencia diaria, no con la ausencia de diferencias.' }
+    { ref: 'Romanos 12,18 (DHH)', cita: 'Estén en paz con todos, en cuanto dependa de ustedes.', reflexion: 'No siempre está en tus manos evitar el conflicto, pero sí buscar la paz de tu parte.' },
+    { ref: 'Efesios 4,26 (DHH)', cita: 'Si se enojan, no pequen; no dejen que el enojo les dure hasta la puesta del sol.', reflexion: 'Las discusiones familiares duelen menos cuando no se dejan crecer con el tiempo.' },
+    { ref: 'Colosenses 3,13 (DHH)', cita: 'Sopórtense y perdónense unos a otros, así como el Señor los perdonó.', reflexion: 'La familia se sostiene con paciencia diaria, no con la ausencia de diferencias.' }
   ],
   proposito: [
-    { ref: 'Jeremías 29:11 (DHH)', cita: 'Yo sé los planes que tengo para ustedes, planes para su bienestar y no para su mal.', reflexion: 'Aun cuando no lo veas claro, Dios tiene un propósito para tu vida.' },
-    { ref: 'Efesios 2:10 (DHH)', cita: 'Somos hechura de Dios, creados para hacer buenas obras.', reflexion: 'Tu vida tiene un sentido que va más allá de lo que hoy alcanzas a ver.' },
-    { ref: 'Salmo 139:14 (DHH)', cita: 'Te alabo porque soy una creación admirable.', reflexion: 'El propósito comienza por reconocer que tu vida misma tiene valor a los ojos de Dios.' }
+    { ref: 'Jeremías 29,11 (DHH)', cita: 'Yo sé los planes que tengo para ustedes, planes para su bienestar y no para su mal.', reflexion: 'Aun cuando no lo veas claro, Dios tiene un propósito para tu vida.' },
+    { ref: 'Efesios 2,10 (DHH)', cita: 'Somos hechura de Dios, creados para hacer buenas obras.', reflexion: 'Tu vida tiene un sentido que va más allá de lo que hoy alcanzas a ver.' },
+    { ref: 'Salmo 139,14 (DHH)', cita: 'Te alabo porque soy una creación admirable.', reflexion: 'El propósito comienza por reconocer que tu vida misma tiene valor a los ojos de Dios.' }
   ],
   finanzas: [
-    { ref: 'Filipenses 4:19 (DHH)', cita: 'Mi Dios les proveerá todo lo que necesiten.', reflexion: 'La preocupación por el dinero puede entregarse en oración, sin dejar de actuar con responsabilidad.' },
-    { ref: 'Mateo 6:33 (DHH)', cita: 'Busquen primero el reino de Dios, y todo lo demás se les dará por añadidura.', reflexion: 'Ordenar las prioridades no resuelve una deuda, pero sí devuelve paz para enfrentarla.' },
-    { ref: 'Salmo 37:25 (DHH)', cita: 'Nunca he visto a los justos abandonados por el Señor.', reflexion: 'En tiempos de escasez, la fe no promete riqueza, pero sí que no estarás abandonado/a.' }
+    { ref: 'Filipenses 4,19 (DHH)', cita: 'Mi Dios les proveerá todo lo que necesiten.', reflexion: 'La preocupación por el dinero puede entregarse en oración, sin dejar de actuar con responsabilidad.' },
+    { ref: 'Mateo 6,33 (DHH)', cita: 'Busquen primero el reino de Dios, y todo lo demás se les dará por añadidura.', reflexion: 'Ordenar las prioridades no resuelve una deuda, pero sí devuelve paz para enfrentarla.' },
+    { ref: 'Salmo 37,25 (DHH)', cita: 'Nunca he visto a los justos abandonados por el Señor.', reflexion: 'En tiempos de escasez, la fe no promete riqueza, pero sí que no estarás abandonado/a.' }
   ],
   sueno: [
-    { ref: 'Salmo 4:8 (DHH)', cita: 'En paz me acuesto y en paz me duermo, porque solo tú, Señor, me haces vivir seguro.', reflexion: 'Entregar las preocupaciones antes de dormir puede traer una calma que el cansancio no da.' },
-    { ref: 'Proverbios 3:24 (DHH)', cita: 'Cuando te acuestes, no tendrás temor, y descansarás con un sueño agradable.', reflexion: 'Confiar en Dios por la noche es una forma de soltar lo que no puedes resolver hoy.' },
-    { ref: 'Mateo 11:28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'El descanso que ofrece Jesús es también para las noches en que el cuerpo no logra descansar.' }
+    { ref: 'Salmo 4,8 (DHH)', cita: 'En paz me acuesto y en paz me duermo, porque solo tú, Señor, me haces vivir seguro.', reflexion: 'Entregar las preocupaciones antes de dormir puede traer una calma que el cansancio no da.' },
+    { ref: 'Proverbios 3,24 (DHH)', cita: 'Cuando te acuestes, no tendrás temor, y descansarás con un sueño agradable.', reflexion: 'Confiar en Dios por la noche es una forma de soltar lo que no puedes resolver hoy.' },
+    { ref: 'Mateo 11,28 (DHH)', cita: 'Vengan a mí todos los que están cansados y agobiados, y yo les daré descanso.', reflexion: 'El descanso que ofrece Jesús es también para las noches en que el cuerpo no logra descansar.' }
   ],
   autoestima: [
-    { ref: 'Salmo 139:14 (DHH)', cita: 'Te alabo porque soy una creación admirable; ¡tus obras son maravillosas!', reflexion: 'Antes de que alguien opinara sobre ti, Dios ya te había mirado como una obra admirable.' },
-    { ref: 'Génesis 1:27 (DHH)', cita: 'Dios creó al ser humano a su imagen; hombre y mujer los creó.', reflexion: 'Tu valor no depende de un espejo ni de una comparación — viene de haber sido creado/a a imagen de Dios.' },
-    { ref: '1 Samuel 16:7 (DHH)', cita: 'El Señor no se fija en lo que se fija el hombre... el Señor se fija en el corazón.', reflexion: 'Lo que más importa de ti no es lo que se ve por fuera, sino lo que Dios ve en tu interior.' },
-    { ref: 'Isaías 43:4 (DHH)', cita: 'Tú eres de gran valor ante mis ojos, y te doy honra, y te amo.', reflexion: 'Ese "me siento feo/a" que sientes hoy no es lo que Dios ve cuando te mira.' },
-    { ref: 'Efesios 2:10 (DHH)', cita: 'Somos hechura de Dios, creados en Cristo Jesús para hacer buenas obras.', reflexion: 'Fuiste hecho/a con un propósito, no como un error ni una casualidad.' }
+    { ref: 'Salmo 139,14 (DHH)', cita: 'Te alabo porque soy una creación admirable; ¡tus obras son maravillosas!', reflexion: 'Antes de que alguien opinara sobre ti, Dios ya te había mirado como una obra admirable.' },
+    { ref: 'Génesis 1,27 (DHH)', cita: 'Dios creó al ser humano a su imagen; hombre y mujer los creó.', reflexion: 'Tu valor no depende de un espejo ni de una comparación — viene de haber sido creado/a a imagen de Dios.' },
+    { ref: '1 Samuel 16,7 (DHH)', cita: 'El Señor no se fija en lo que se fija el hombre... el Señor se fija en el corazón.', reflexion: 'Lo que más importa de ti no es lo que se ve por fuera, sino lo que Dios ve en tu interior.' },
+    { ref: 'Isaías 43,4 (DHH)', cita: 'Tú eres de gran valor ante mis ojos, y te doy honra, y te amo.', reflexion: 'Ese "me siento feo/a" que sientes hoy no es lo que Dios ve cuando te mira.' },
+    { ref: 'Efesios 2,10 (DHH)', cita: 'Somos hechura de Dios, creados en Cristo Jesús para hacer buenas obras.', reflexion: 'Fuiste hecho/a con un propósito, no como un error ni una casualidad.' }
   ]
 };
 
@@ -651,6 +726,20 @@ class Component extends DCLogic {
     donatePane: 'dinero',
     pickupSubmitted: false,
     volunteerSubmitted: false,
+    privacyOpen: false,
+    activityVideos: { juguetes: '', comida: '', ropa: '', asilos: '' },
+    activityPhotos: { juguetes: [], comida: [], ropa: [], asilos: [] },
+    galleryOpenKey: null,
+    testimonials: [
+      { id: 1, quote: 'Cuando mi hijo estaba en el hospital, la visita de la fundación fue un respiro de alegría en medio de tantos días difíciles.', detail: 'Los meses de tratamiento fueron los más difíciles de nuestra familia. Cada visita del equipo traía juguetes, risas y un momento de normalidad para mi hijo — y también un espacio para que yo, como madre, sintiera que no estábamos solos en esto.', name: 'Madre de familia', role: 'Acompañamiento hospitalario', initial: 'M' },
+      { id: 2, quote: 'Después de años sintiéndome sola en el asilo, ahora espero cada visita con el corazón lleno de ilusión.', detail: 'Llevo varios años en el asilo y mi familia vive lejos. Las visitas del grupo se han vuelto lo que más espero cada semana: conversamos, cantamos, y por un rato vuelvo a sentirme acompañada.', name: 'Residente de un asilo', role: 'Programa de adultos mayores', initial: 'R' },
+      { id: 3, quote: 'La donación de mercados llegó justo cuando más lo necesitábamos. Sentimos que Dios no nos había olvidado.', detail: 'Habíamos pasado semanas muy difíciles económicamente. Cuando tocaron la puerta con el mercado, no solo recibimos comida — recibimos la confirmación de que alguien pensaba en nosotros y que no estábamos solos en la dificultad.', name: 'Familia beneficiaria', role: 'Donación de alimentos', initial: 'F' }
+    ],
+    testimonialFormOpen: false,
+    testimonialEditingId: null,
+    testimonialDraft: { name: '', role: '', quote: '', detail: '' },
+    testimonialDetailId: null,
+    isAdmin: false,
     freeText: '',
     cultureFactIndex: 0,
     faithCapsuleIndex: 0,
@@ -665,6 +754,42 @@ class Component extends DCLogic {
     this.onMqChange = (e) => this.setState({ isMobile: e.matches });
     this.setState({ isMobile: this.mq.matches });
     this.mq.addEventListener('change', this.onMqChange);
+
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('admin') === '1') this.setState({ isAdmin: true });
+    } catch (e) {}
+
+    try {
+      const saved = JSON.parse(window.localStorage.getItem('unc_activity_photos') || '{}');
+      const merged = { ...this.state.activityPhotos };
+      Object.keys(merged).forEach(k => { if (Array.isArray(saved[k])) merged[k] = saved[k]; });
+      this.setState({ activityPhotos: merged });
+    } catch (e) {}
+  }
+
+  addActivityPhoto(key, file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const photos = { ...this.state.activityPhotos, [key]: [...this.state.activityPhotos[key], reader.result] };
+      this.setState({ activityPhotos: photos });
+      try { window.localStorage.setItem('unc_activity_photos', JSON.stringify(photos)); } catch (e) {}
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeActivityPhoto(key, index) {
+    const photos = { ...this.state.activityPhotos, [key]: this.state.activityPhotos[key].filter((_, i) => i !== index) };
+    this.setState({ activityPhotos: photos });
+    try { window.localStorage.setItem('unc_activity_photos', JSON.stringify(photos)); } catch (e) {}
+  }
+
+  toggleAdmin() {
+    if (this.state.isAdmin) { this.setState({ isAdmin: false }); return; }
+    const code = window.prompt('Código de administrador:');
+    if (code === 'unnuevocamino2026') this.setState({ isAdmin: true });
+    else if (code !== null) window.alert('Código incorrecto.');
   }
 
   componentWillUnmount() {
@@ -674,6 +799,49 @@ class Component extends DCLogic {
   isCrisisText(text) {
     const t = text.toLowerCase();
     return CRISIS_KEYWORDS.some(k => t.includes(k));
+  }
+
+  onNewTestimonial() {
+    this.setState({ testimonialFormOpen: true, testimonialEditingId: null, testimonialDraft: { name: '', role: '', quote: '', detail: '' } });
+  }
+
+  onEditTestimonial(t) {
+    this.setState({ testimonialFormOpen: true, testimonialEditingId: t.id, testimonialDraft: { name: t.name, role: t.role, quote: t.quote, detail: t.detail || '' } });
+  }
+
+  onDeleteTestimonial(id) {
+    this.setState({ testimonials: this.state.testimonials.filter(x => x.id !== id) });
+  }
+
+  onSaveTestimonial(e) {
+    e.preventDefault();
+    const d = this.state.testimonialDraft;
+    const initial = (d.name.trim()[0] || '?').toUpperCase();
+    if (this.state.testimonialEditingId != null) {
+      this.setState({
+        testimonials: this.state.testimonials.map(x => x.id === this.state.testimonialEditingId ? { ...x, ...d, initial } : x),
+        testimonialFormOpen: false
+      });
+    } else {
+      const id = Date.now();
+      this.setState({
+        testimonials: [{ id, ...d, initial }, ...this.state.testimonials],
+        testimonialFormOpen: false
+      });
+    }
+  }
+
+  toEmbedUrl(url) {
+    if (!url) return '';
+    const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{6,})/);
+    if (yt) return 'https://www.youtube.com/embed/' + yt[1];
+    const drive = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
+    if (drive) return 'https://drive.google.com/file/d/' + drive[1] + '/preview';
+    return '';
+  }
+
+  setActivityVideo(key, value) {
+    this.setState({ activityVideos: { ...this.state.activityVideos, [key]: value } });
   }
 
   submitToNetlify(e, formName, stateFlag) {
@@ -846,7 +1014,76 @@ class Component extends DCLogic {
       pickupSubmitted: s.pickupSubmitted,
       onPickupSubmit: (e) => this.submitToNetlify(e, 'pickup', 'pickupSubmitted'),
       volunteerSubmitted: s.volunteerSubmitted,
-      onVolunteerSubmit: (e) => this.submitToNetlify(e, 'volunteer', 'volunteerSubmitted')
+      onVolunteerSubmit: (e) => this.submitToNetlify(e, 'volunteer', 'volunteerSubmitted'),
+
+      privacyOpen: s.privacyOpen,
+      onOpenPrivacy: (e) => { e.preventDefault(); this.setState({ privacyOpen: true }); },
+      onClosePrivacy: () => this.setState({ privacyOpen: false }),
+
+      activities: ACTIVITIES_META.map(a => {
+        const photos = s.activityPhotos[a.key];
+        const cover = photos.length ? photos[0] : a.placeholder;
+        const embed = this.toEmbedUrl(s.activityVideos[a.key]);
+        return {
+          ...a,
+          photoUrl: `url(${cover})`,
+          isPlaceholder: photos.length === 0,
+          video: s.activityVideos[a.key],
+          onVideoChange: (e) => this.setActivityVideo(a.key, e.target.value),
+          onAddPhoto: (e) => this.addActivityPhoto(a.key, e.target.files && e.target.files[0]),
+          onOpenGallery: () => this.setState({ galleryOpenKey: a.key }),
+          videoEmbed: embed,
+          hasVideoEmbed: !!embed
+        };
+      }),
+
+      galleryOpen: s.galleryOpenKey != null,
+      galleryData: (() => {
+        const meta = ACTIVITIES_META.find(a => a.key === s.galleryOpenKey);
+        if (!meta) return { title: '', images: [] };
+        const photos = s.activityPhotos[s.galleryOpenKey] || [];
+        const images = photos.map((url, i) => ({
+          bgUrl: `url(${url})`,
+          onDelete: () => this.removeActivityPhoto(s.galleryOpenKey, i)
+        }));
+        return { title: meta.title, images, isEmpty: photos.length === 0, key: s.galleryOpenKey };
+      })(),
+      onCloseGallery: () => this.setState({ galleryOpenKey: null }),
+      onGalleryAddPhoto: (e) => { if (s.galleryOpenKey) this.addActivityPhoto(s.galleryOpenKey, e.target.files && e.target.files[0]); },
+
+      testimonials: s.testimonials.map(t => ({
+        ...t,
+        tag: 'Ejemplo — reemplazar',
+        hasDetail: !!(t.detail && t.detail.trim()),
+        onOpen: () => this.setState({ testimonialDetailId: t.id }),
+        onEdit: (e) => { e.stopPropagation(); this.onEditTestimonial(t); },
+        onDelete: (e) => { e.stopPropagation(); this.onDeleteTestimonial(t.id); }
+      })),
+      testimonialFormOpen: s.testimonialFormOpen,
+      testimonialFormOpenAdmin: s.testimonialFormOpen && s.isAdmin,
+      testimonialFormTitle: s.testimonialEditingId != null ? 'Editar testimonio' : 'Nuevo testimonio',
+      testimonialDraft: s.testimonialDraft,
+      onDraftChange: {
+        name: (e) => this.setState({ testimonialDraft: { ...s.testimonialDraft, name: e.target.value } }),
+        role: (e) => this.setState({ testimonialDraft: { ...s.testimonialDraft, role: e.target.value } }),
+        quote: (e) => this.setState({ testimonialDraft: { ...s.testimonialDraft, quote: e.target.value } }),
+        detail: (e) => this.setState({ testimonialDraft: { ...s.testimonialDraft, detail: e.target.value } })
+      },
+      onNewTestimonial: () => this.onNewTestimonial(),
+      onSaveTestimonial: (e) => this.onSaveTestimonial(e),
+      onCancelTestimonial: () => this.setState({ testimonialFormOpen: false }),
+
+      testimonialDetailShown: s.testimonialDetailId != null,
+      testimonialDetail: (() => {
+        const t = s.testimonials.find(x => x.id === s.testimonialDetailId);
+        return t ? { ...t, tag: 'Ejemplo — reemplazar', detail: t.detail && t.detail.trim() ? t.detail : t.quote } : { tag: '', quote: '', detail: '', name: '', role: '', initial: '' };
+      })(),
+      onCloseDetail: () => this.setState({ testimonialDetailId: null }),
+      stopPropagation: (e) => e.stopPropagation(),
+
+      isAdmin: s.isAdmin,
+      adminToggleLabel: s.isAdmin ? 'Salir del modo administrador' : 'Acceso administrador',
+      onToggleAdmin: () => this.toggleAdmin()
     };
   }
 }
