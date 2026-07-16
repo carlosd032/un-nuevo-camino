@@ -266,6 +266,47 @@
     </section>
     </sc-if>
 
+    <!-- ============ TAB: ENSEÑANZAS ============ -->
+    <sc-if value="{{ tabEnsenanzas }}" hint-placeholder-val="{{ false }}">
+    <section style="animation:fadein .4s ease;padding:56px 0;">
+      <div style="max-width:60ch;margin-bottom:34px;">
+        <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Enseñanzas</span>
+        <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Series de reflexiones para crecer paso a paso</h2>
+        <p style="max-width:60ch;">Elige una serie y descubre pequeñas reflexiones bíblicas — puedes ir pasando a la siguiente cuando quieras.</p>
+      </div>
+
+      <div style="display:grid;gap:22px;grid-template-columns:{{ grid2Cols }};">
+        <sc-for list="{{ seriesCards }}" as="series" hint-placeholder-count="4">
+          <div style="{{ series.cardStyle }}" onClick="{{ series.onOpen }}">
+            <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;margin:0 0 8px 0;">{{ series.title }}</h3>
+            <p style="margin:0;font-size:.9rem;color:#585448;">{{ series.subtitle }}</p>
+            <span style="display:inline-block;margin-top:12px;font-size:.76rem;font-weight:700;color:#3B5747;">{{ series.count }} reflexiones →</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ seriesSelected }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#DCE6DE;border-radius:14px;padding:28px;margin-top:30px;animation:fadein .3s ease;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;">
+            <div>
+              <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.4em;display:inline-block;">{{ seriesDetail.title }}</span>
+              <p style="margin:0;font-size:.86rem;color:#3B5747;">{{ seriesDetail.subtitle }}</p>
+            </div>
+            <button aria-label="Cerrar" style="background:rgba(255,255,255,.6);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:1rem;color:#3B5747;flex-shrink:0;" onClick="{{ onCloseSeries }}">×</button>
+          </div>
+          <div style="background:#fff;border-radius:12px;padding:22px;margin-top:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <span style="font-weight:700;font-size:.82rem;color:#3B5747;text-transform:uppercase;letter-spacing:.04em;">Reflexión</span>
+              <span style="font-size:.72rem;color:#585448;white-space:nowrap;">{{ seriesDetail.pos }}</span>
+            </div>
+            <p style="margin:10px 0 16px 0;">{{ seriesDetail.reflection }}</p>
+            <button style="background:#DCE6DE;border:none;border-radius:999px;padding:8px 16px;font-family:'Karla',sans-serif;font-weight:600;font-size:.8rem;color:#3B5747;cursor:pointer;" style-hover="background:#C79A3C; color:#2B2409;" onClick="{{ onNextSeriesReflection }}">Siguiente reflexión →</button>
+          </div>
+        </div>
+      </sc-if>
+    </section>
+    </sc-if>
+
     <!-- ============ TAB: ACTIVIDADES Y DONACIONES ============ -->
     <sc-if value="{{ tabActividades }}" hint-placeholder-val="{{ false }}">
     <section style="animation:fadein .4s ease;padding:56px 0;">
@@ -301,7 +342,7 @@
 
           <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;margin-top:22px;">
             <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Galería de actividades</h3>
-            <p style="font-size:.88rem;">Haz clic en el nombre o la foto de cualquier actividad para ver todas sus imágenes. Las fotos de portada son de referencia — inicia sesión como administrador para reemplazarlas por las reales.</p>
+            <p style="font-size:.88rem;">Haz clic en el nombre o la foto de cualquier actividad para ver todas sus imágenes.</p>
           </div>
         </div>
 
@@ -322,7 +363,6 @@
               <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);"><span style="color:#9FB2BE;">Tipo de cuenta</span><span>[Ahorros / Corriente]</span></div>
               <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);"><span style="color:#9FB2BE;">N.º de cuenta</span><span>[000-000000-00]</span></div>
               <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;"><span style="color:#9FB2BE;">NIT / Titular</span><span>[Nombre de la fundación]</span></div>
-              <span style="font-size:.72rem;color:#F1E2BB;margin-top:10px;display:block;">Reemplaza estos datos con la información bancaria real de la fundación antes de publicar.</span>
             </div>
           </sc-if>
 
@@ -388,7 +428,7 @@
         <div>
           <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Testimonios</span>
           <h2 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.7rem;">Historias de esperanza</h2>
-          <p style="max-width:60ch;">Haz clic en una historia para ver el relato completo. Reemplaza los ejemplos con testimonios reales, siempre con autorización de la persona.</p>
+          <p style="max-width:60ch;">Haz clic en una historia para ver el relato completo.</p>
         </div>
         <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
           <button style="background:#3B5747;color:#F8F4EA;border:none;border-radius:999px;padding:10px 18px;font-family:'Karla',sans-serif;font-weight:700;font-size:.84rem;cursor:pointer;white-space:nowrap;" onClick="{{ onNewTestimonial }}">+ Añadir testimonio</button>
@@ -420,7 +460,6 @@
                 <button aria-label="Eliminar" style="background:#F8F4EA;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:.8rem;color:#C1704F;" onClick="{{ t.onDelete }}">×</button>
               </div>
             </sc-if>
-            <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">{{ t.tag }}</span>
             <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.05rem;">"{{ t.quote }}"</p>
             <div style="margin-top:14px;display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;flex-shrink:0;">{{ t.initial }}</div><div><b style="display:block;font-size:.88rem;">{{ t.name }}</b><span style="font-size:.78rem;color:#585448;">{{ t.role }}</span></div></div>
             <sc-if value="{{ t.hasDetail }}" hint-placeholder-val="{{ false }}">
@@ -434,7 +473,6 @@
         <div style="position:fixed;inset:0;background:rgba(43,42,36,.45);display:flex;align-items:center;justify-content:center;padding:24px;z-index:200;" onClick="{{ onCloseDetail }}">
           <div style="background:#fff;border-radius:16px;padding:32px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;position:relative;" onClick="{{ stopPropagation }}">
             <button aria-label="Cerrar" style="position:absolute;top:16px;right:16px;background:#F8F4EA;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;color:#3B5747;" onClick="{{ onCloseDetail }}">×</button>
-            <span style="display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#C1704F;background:#FFF1EB;padding:3px 9px;border-radius:999px;margin-bottom:14px;">{{ testimonialDetail.tag }}</span>
             <p style="font-family:'Fraunces',serif;font-style:italic;color:#2E4356;font-size:1.2rem;">"{{ testimonialDetail.quote }}"</p>
             <p style="margin:16px 0;">{{ testimonialDetail.detail }}</p>
             <div style="display:flex;align-items:center;gap:10px;"><div style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;color:#3B5747;flex-shrink:0;">{{ testimonialDetail.initial }}</div><div><b style="display:block;font-size:.88rem;">{{ testimonialDetail.name }}</b><span style="font-size:.78rem;color:#585448;">{{ testimonialDetail.role }}</span></div></div>
@@ -490,7 +528,6 @@
             <a href="#" aria-label="Facebook" style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="17" height="17"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path></svg></a>
             <a href="#" aria-label="WhatsApp" style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="17" height="17"><path d="M21 11.5a8.5 8.5 0 01-12.4 7.5L3 20l1.1-5.4A8.5 8.5 0 1121 11.5z"></path></svg></a>
           </div>
-          <p style="font-size:.78rem;color:#585448;margin-top:16px;">Reemplaza estos datos de ejemplo con el correo, teléfono y redes sociales reales de la fundación.</p>
         </div>
       </div>
     </section>
@@ -507,7 +544,6 @@
           <p><b>Responsable del tratamiento:</b> Un Nuevo Camino recopila los datos que diligencias voluntariamente en los formularios de esta página (nombre, teléfono, correo, dirección) únicamente para gestionar tu vinculación como voluntario/a o coordinar la recogida de donaciones.</p>
           <p><b>Finalidad:</b> Contactarte para coordinar actividades, jornadas, visitas o la logística de donación que solicitaste. No usamos tus datos con fines comerciales ni los vendemos ni los compartimos con terceros ajenos a la labor de la fundación.</p>
           <p><b>Derechos:</b> Puedes solicitar en cualquier momento conocer, actualizar, rectificar o eliminar tus datos, escribiendo a nuestro correo de contacto.</p>
-          <p style="font-size:.78rem;color:#585448;">Este es un texto de referencia — reemplázalo por la política de protección de datos definitiva, revisada conforme a la normativa aplicable (Colombia: Ley 1581 de 2012), antes de publicar.</p>
         </div>
       </div>
     </div>
@@ -524,6 +560,7 @@
         <ul style="list-style:none;padding:0;margin:0;display:grid;gap:6px;">
           <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goInicio }}">Inicio</a></li>
           <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goFe }}">Formación espiritual</a></li>
+          <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goEnsenanzas }}">Enseñanzas</a></li>
           <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goActividades }}">Actividades y donaciones</a></li>
           <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goTestimonios }}">Testimonios</a></li>
           <li style="font-size:.82rem;"><a href="#" style="color:#B9C7D0;text-decoration:none;" style-hover="color:#F1E2BB;" onClick="{{ goUnete }}">Únete</a></li>
@@ -531,7 +568,7 @@
       </div>
     </div>
     <div style="max-width:1120px;margin:26px auto 0;padding:18px 28px 0;border-top:1px solid rgba(255,255,255,.12);font-size:.75rem;color:#8FA1AC;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-      <span>© 2026 Un Nuevo Camino. Sitio de ejemplo — reemplaza los datos de contacto y bancarios antes de publicar.</span>
+      <span>© 2026 Un Nuevo Camino.</span>
       <button style="background:none;border:none;color:#8FA1AC;font-size:.75rem;cursor:pointer;text-decoration:underline;padding:0;" onClick="{{ onToggleAdmin }}">{{ adminToggleLabel }}</button>
     </div>
   </footer>
@@ -541,6 +578,41 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 const CRISIS_KEYWORDS = ['suicid','matarme','quiero morir','no quiero vivir','acabar con mi vida','hacerme daño','hacerme dano','quitarme la vida','ya no quiero vivir','autolesion','autolesión','no vale la pena vivir'];
+
+const TEACHING_SERIES = [
+  { key: 'finanzas', title: 'Finanzas con Propósito', subtitle: 'Historias bíblicas sobre buena administración.', reflections: [
+    'La parábola de los talentos (Mateo 25,14-30) nos recuerda que todo lo que tenemos —dinero, tiempo, dones— nos ha sido confiado para hacerlo fructificar, no para enterrarlo por miedo.',
+    'José en Egipto (Génesis 41) administró con previsión los años de abundancia para sostener los años de escasez: administrar bien hoy es un acto de amor hacia el mañana.',
+    'La viuda de Sarepta (1 Reyes 17,7-16) compartió lo poco que tenía confiando en la providencia de Dios, y su harina no se acabó: la generosidad no empobrece, multiplica.',
+    'Eclesiastés 5,9 nos advierte: "quien ama el dinero nunca tiene suficiente" — la verdadera seguridad no está en acumular, sino en poner a Dios primero.',
+    'La viuda del óbolo (Marcos 12,41-44) dio dos moneditas, todo lo que tenía: Jesús valora el corazón detrás de la ofrenda más que la cantidad entregada.',
+    'Proverbios 21,5 enseña que "los planes bien pensados llevan a la abundancia": administrar con propósito es también un ejercicio de sabiduría y disciplina.'
+  ]},
+  { key: 'relaciones', title: 'Relaciones que Edifican', subtitle: 'Cómo cultivar relaciones interpersonales sanas con propósito.', reflections: [
+    'David y Jonatán (1 Samuel 18,1-4) muestran una amistad leal que antepone el bien del otro al propio interés: así se construyen relaciones que perduran.',
+    'Rut y Noemí (Rut 1,16-17) nos enseñan que el compromiso y la fidelidad sostienen los vínculos incluso en tiempos de pérdida y cambio.',
+    '1 Corintios 13,4-7 describe el amor como paciente y bondadoso: una guía práctica para toda relación, de pareja, familia o amistad.',
+    'Efesios 4,32 nos invita a ser bondadosos y a perdonarnos unos a otros: las relaciones sanas se cultivan perdonando antes de que el rencor eche raíz.',
+    'Eclesiastés 4,9-10 recuerda que "más valen dos que uno solo", porque si uno cae, el otro lo levanta: nadie fue creado para caminar en soledad.',
+    'Santiago 1,19 aconseja ser prontos para escuchar y lentos para hablar: escuchar de verdad es uno de los actos de amor más sencillos y más olvidados.'
+  ]},
+  { key: 'identidad', title: 'Identidad y Bienestar', subtitle: 'Temas de autoestima, salud mental y dirección desde la Palabra.', reflections: [
+    'Salmo 139,14 declara "te alabo porque soy una creación admirable": tu valor no depende de tu apariencia ni de tus logros, sino de haber sido creado por Dios.',
+    'Génesis 1,27 enseña que fuimos hechos a imagen de Dios: esa es la base última de la dignidad de toda persona, sin excepción.',
+    'Isaías 43,4 dice "eres precioso a mis ojos, digno de estima, y yo te amo": una identidad que no se mide por comparación con nadie más.',
+    'Jeremías 29,11 recuerda que Dios tiene planes de bienestar para cada persona: incluso en momentos de confusión, hay un propósito que aún se puede descubrir.',
+    'Mateo 6,26-27 invita a no angustiarse en exceso, mirando cómo Dios cuida hasta de las aves del cielo: cuidar la mente y el corazón también es parte de la fe.',
+    '2 Corintios 12,9 nos recuerda que la fuerza de Dios se hace presente incluso en nuestra debilidad: no es necesario ser perfecto para ser amado.'
+  ]},
+  { key: 'proposito', title: 'Propósito y Sentido', subtitle: 'Buscar guía y autoayuda bíblica para la vida diaria.', reflections: [
+    'Proverbios 3,5-6 aconseja confiar en el Señor y no apoyarse solo en la propia inteligencia: él allana el camino cuando se lo reconoce en cada paso.',
+    'Jeremías 1,5 afirma "antes de formarte en el vientre, ya te conocía": cada vida tiene un propósito trazado antes incluso de nacer.',
+    'Miqueas 6,8 resume el sentido de una vida buena en tres cosas: practicar la justicia, amar la misericordia y caminar humildemente con Dios.',
+    'Romanos 8,28 asegura que Dios hace que todo ayude para bien a quienes lo aman: incluso las etapas difíciles pueden tener un sentido que aún no vemos.',
+    'Filipenses 4,13 recuerda que la fuerza para seguir adelante no depende solo de uno mismo, sino de Cristo que fortalece.',
+    'Eclesiastés 3,1 enseña que hay un tiempo para cada cosa bajo el cielo: encontrar sentido también es aprender a discernir el momento que se está viviendo.'
+  ]}
+];
 
 const FAITH_CAPSULES = [
   '"La fe que no duda es una fe muerta." Fortalecer la vida espiritual empieza por dedicar unos minutos cada día a la oración silenciosa: no se trata de decir muchas palabras, sino de dejarse mirar por Dios.',
@@ -744,6 +816,8 @@ class Component extends DCLogic {
     cultureFactIndex: 0,
     faithCapsuleIndex: 0,
     jesusLifeIndex: 0,
+    selectedSeriesKey: null,
+    seriesReflectionIndex: 0,
     selectedSituation: null, // situation key or '__CRISIS__'
     verseStatus: 'idle', // idle | result | crisis
     verseIndex: 0
@@ -914,6 +988,7 @@ class Component extends DCLogic {
     const navList = [
       { id: 'inicio', label: 'Inicio' },
       { id: 'fe', label: 'Formación espiritual' },
+      { id: 'ensenanzas', label: 'Enseñanzas' },
       { id: 'actividades', label: 'Actividades y donaciones' },
       { id: 'testimonios', label: 'Testimonios' },
       { id: 'unete', label: 'Únete' }
@@ -963,6 +1038,7 @@ class Component extends DCLogic {
 
       tabInicio: s.activeTab === 'inicio',
       tabFe: s.activeTab === 'fe',
+      tabEnsenanzas: s.activeTab === 'ensenanzas',
       tabActividades: s.activeTab === 'actividades',
       tabTestimonios: s.activeTab === 'testimonios',
       tabUnete: s.activeTab === 'unete',
@@ -970,6 +1046,7 @@ class Component extends DCLogic {
       onBrandClick: (e) => { e.preventDefault(); this.setTab('inicio'); },
       goInicio: (e) => { e.preventDefault(); this.setTab('inicio'); },
       goFe: (e) => { e && e.preventDefault && e.preventDefault(); this.setTab('fe'); },
+      goEnsenanzas: (e) => { e && e.preventDefault && e.preventDefault(); this.setTab('ensenanzas'); },
       goActividades: (e) => { e && e.preventDefault && e.preventDefault(); this.setTab('actividades'); },
       goTestimonios: (e) => { e.preventDefault(); this.setTab('testimonios'); },
       goUnete: (e) => { e.preventDefault(); this.setTab('unete'); },
@@ -1003,6 +1080,34 @@ class Component extends DCLogic {
       jesusLifeFact: JESUS_LIFE[s.jesusLifeIndex],
       jesusLifePos: (s.jesusLifeIndex + 1) + ' / ' + JESUS_LIFE.length,
       onNextJesusLife: () => this.setState({ jesusLifeIndex: (s.jesusLifeIndex + 1) % JESUS_LIFE.length }),
+
+      seriesCards: TEACHING_SERIES.map(series => ({
+        key: series.key,
+        title: series.title,
+        subtitle: series.subtitle,
+        count: series.reflections.length,
+        selected: s.selectedSeriesKey === series.key,
+        cardStyle: `background:#fff;border-radius:14px;padding:24px;border:1px solid rgba(43,42,36,0.12);border-left:3px solid ${s.selectedSeriesKey === series.key ? '#C79A3C' : '#5C7A66'};cursor:pointer;background-color:${s.selectedSeriesKey === series.key ? '#F1E2BB' : '#fff'};transition:background-color .15s, border-color .15s;`,
+        onOpen: () => this.setState({ selectedSeriesKey: series.key, seriesReflectionIndex: 0 })
+      })),
+      seriesSelected: !!s.selectedSeriesKey,
+      seriesDetail: (() => {
+        const series = TEACHING_SERIES.find(sr => sr.key === s.selectedSeriesKey);
+        if (!series) return { title: '', subtitle: '', reflection: '', pos: '' };
+        const idx = s.seriesReflectionIndex % series.reflections.length;
+        return {
+          title: series.title,
+          subtitle: series.subtitle,
+          reflection: series.reflections[idx],
+          pos: (idx + 1) + ' / ' + series.reflections.length
+        };
+      })(),
+      onNextSeriesReflection: () => {
+        const series = TEACHING_SERIES.find(sr => sr.key === s.selectedSeriesKey);
+        if (!series) return;
+        this.setState({ seriesReflectionIndex: (s.seriesReflectionIndex + 1) % series.reflections.length });
+      },
+      onCloseSeries: () => this.setState({ selectedSeriesKey: null }),
 
       donatePaneDinero: s.donatePane === 'dinero',
       donatePaneBienes: s.donatePane === 'bienes',
@@ -1053,7 +1158,6 @@ class Component extends DCLogic {
 
       testimonials: s.testimonials.map(t => ({
         ...t,
-        tag: 'Ejemplo — reemplazar',
         hasDetail: !!(t.detail && t.detail.trim()),
         onOpen: () => this.setState({ testimonialDetailId: t.id }),
         onEdit: (e) => { e.stopPropagation(); this.onEditTestimonial(t); },
@@ -1076,7 +1180,7 @@ class Component extends DCLogic {
       testimonialDetailShown: s.testimonialDetailId != null,
       testimonialDetail: (() => {
         const t = s.testimonials.find(x => x.id === s.testimonialDetailId);
-        return t ? { ...t, tag: 'Ejemplo — reemplazar', detail: t.detail && t.detail.trim() ? t.detail : t.quote } : { tag: '', quote: '', detail: '', name: '', role: '', initial: '' };
+        return t ? { ...t, detail: t.detail && t.detail.trim() ? t.detail : t.quote } : { quote: '', detail: '', name: '', role: '', initial: '' };
       })(),
       onCloseDetail: () => this.setState({ testimonialDetailId: null }),
       stopPropagation: (e) => e.stopPropagation(),
