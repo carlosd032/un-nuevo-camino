@@ -71,7 +71,7 @@
         <div style="max-width:1120px;margin:0 auto;padding:0 28px;position:relative;z-index:2;">
           <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#3B5747;margin-bottom:.6em;display:inline-block;">Fe · Esperanza · Servicio</span>
           <h1 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:clamp(2.1rem,4.6vw,3.4rem);max-width:14ch;line-height:1.08;">Un camino de esperanza, iluminado por la fe.</h1>
-          <p style="font-size:1.1rem;max-width:52ch;color:#585448;">Somos un movimiento católico que lleva esperanza a niños con cáncer, adultos mayores y familias de bajos recursos, inspirados en el amor de Dios y llamados a caminar junto a quien más lo necesita.</p>
+          <p style="font-size:1.1rem;max-width:52ch;color:#585448;">Somos una comunidad de fe que lleva esperanza a niños con cáncer, adultos mayores y familias de bajos recursos, inspirados en el amor de Dios y llamados a caminar junto a quien más lo necesita.</p>
           <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
             <button style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;background:#C79A3C;color:#2B2409;transition:transform .15s ease, box-shadow .15s ease;" style-hover="box-shadow:0 8px 20px rgba(199,154,60,.32); transform:translateY(-1px);" onClick="{{ goFe }}">Formación espiritual</button>
             <button style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;background:transparent;border:1px solid #2E4356;color:#2E4356;transition:transform .15s ease, box-shadow .15s ease;" style-hover="background:#2E4356; color:#F8F4EA;" onClick="{{ goActividades }}">Quiero donar</button>
@@ -97,7 +97,7 @@
         </div>
         <div style="display:grid;gap:22px;grid-template-columns:{{ grid2Cols }};align-items:start;">
           <div>
-            <p>Un Nuevo Camino es un movimiento católico sin ánimo de lucro. Creemos que cada persona —un niño enfrentando el cáncer, un adulto mayor que vive en soledad, una familia que no llega a fin de mes— merece sentir que no camina sola, y que ese acompañamiento nace de la fe en un Dios que nos llama a servir.</p>
+            <p>Un Nuevo Camino es una comunidad de fe sin ánimo de lucro. Creemos que cada persona —un niño enfrentando el cáncer, un adulto mayor que vive en soledad, una familia con ausencia de alimento— merece sentir que no camina sola, y que ese acompañamiento nace de la fe en un Dios que nos llama a servir.</p>
             <p>No repartimos ayuda desde la distancia: visitamos, escuchamos, oramos y celebramos junto a las comunidades donde estamos presentes. Nuestro trabajo combina la acción concreta —alimento, ropa, juguetes, compañía— con el acompañamiento espiritual que sostiene el alma en los momentos difíciles.</p>
           </div>
           <blockquote style="font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:1.4rem;color:#2E4356;border-left:3px solid #C79A3C;padding-left:22px;margin:0;max-width:52ch;">"Todo lo que hagan, háganlo de buena gana, como si estuvieran sirviendo al Señor y no a los hombres." — Colosenses 3,23 (Dios Habla Hoy)</blockquote>
@@ -349,14 +349,23 @@
         <!-- SIDEBAR: DONATIONS -->
         <aside style="background:#2E4356;color:#F8F4EA;border-radius:14px;padding:26px;position:sticky;top:100px;">
           <span style="font-family:'Karla',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#F1E2BB;margin-bottom:.6em;display:inline-block;">Quiero ayudar</span>
+          <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.12);border-radius:8px;padding:6px 10px;margin-bottom:8px;">
+              <span style="font-size:.72rem;color:#F1E2BB;">Donar dinero: {{ donarDineroStatusLabel }}</span>
+              <button style="background:#C79A3C;color:#2B2409;border:none;border-radius:999px;padding:4px 10px;font-size:.68rem;font-weight:700;cursor:pointer;white-space:nowrap;" onClick="{{ onToggleDonarDineroVisibility }}">{{ donarDineroToggleActionLabel }}</button>
+            </div>
+          </sc-if>
           <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#fff;">Haz parte de esta obra</h3>
           <p style="color:#CBD7DF;font-size:.88rem;">Puedes apoyarnos con una donación económica o entregando bienes materiales para las familias que acompañamos.</p>
 
           <div style="display:flex;background:rgba(255,255,255,.1);border-radius:999px;padding:4px;margin:18px 0;">
-            <button style="{{ donateDineroBtnStyle }}" onClick="{{ onDonateDinero }}">Donar dinero</button>
+            <sc-if value="{{ donarDineroVisibleToPublic }}" hint-placeholder-val="{{ true }}">
+              <button style="{{ donateDineroBtnStyle }}" onClick="{{ onDonateDinero }}">Donar dinero</button>
+            </sc-if>
             <button style="{{ donateBienesBtnStyle }}" onClick="{{ onDonateBienes }}">Donar bienes</button>
           </div>
 
+          <sc-if value="{{ donarDineroVisibleToPublic }}" hint-placeholder-val="{{ true }}">
           <sc-if value="{{ donatePaneDinero }}" hint-placeholder-val="{{ true }}">
             <div>
               <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);"><span style="color:#9FB2BE;">Banco</span><span>[Nombre del banco]</span></div>
@@ -364,6 +373,7 @@
               <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.14);"><span style="color:#9FB2BE;">N.º de cuenta</span><span>[000-000000-00]</span></div>
               <div style="display:flex;justify-content:space-between;font-size:.86rem;padding:8px 0;"><span style="color:#9FB2BE;">NIT / Titular</span><span>[Nombre de la fundación]</span></div>
             </div>
+          </sc-if>
           </sc-if>
 
           <sc-if value="{{ donatePaneBienes }}" hint-placeholder-val="{{ false }}">
@@ -516,7 +526,14 @@
           </sc-if>
         </div>
 
+        <sc-if value="{{ contactoRedesVisibleToPublic }}" hint-placeholder-val="{{ true }}">
         <div style="background:#fff;border:1px solid rgba(43,42,36,0.12);border-radius:14px;padding:24px;">
+          <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#FFF1EB;border-radius:8px;padding:6px 10px;margin-bottom:12px;">
+              <span style="font-size:.72rem;color:#C1704F;">Contacto y redes: {{ contactoRedesStatusLabel }}</span>
+              <button style="background:#3B5747;color:#F8F4EA;border:none;border-radius:999px;padding:4px 10px;font-size:.68rem;font-weight:700;cursor:pointer;white-space:nowrap;" onClick="{{ onToggleContactoRedesVisibility }}">{{ contactoRedesToggleActionLabel }}</button>
+            </div>
+          </sc-if>
           <h3 style="font-family:'Fraunces',serif;font-weight:600;color:#2E4356;font-size:1.15rem;">Contacto y redes</h3>
           <ul style="list-style:none;margin:0;padding:0;display:grid;gap:14px;">
             <li style="display:flex;gap:12px;align-items:center;font-size:.92rem;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="20" height="20" style="flex-shrink:0;"><path d="M3 8l9 6 9-6M3 6h18v12H3z"></path></svg> [correo@unnuevocamino.org]</li>
@@ -529,6 +546,7 @@
             <a href="#" aria-label="WhatsApp" style="width:38px;height:38px;border-radius:50%;background:#DCE6DE;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B5747" stroke-width="1.8" width="17" height="17"><path d="M21 11.5a8.5 8.5 0 01-12.4 7.5L3 20l1.1-5.4A8.5 8.5 0 1121 11.5z"></path></svg></a>
           </div>
         </div>
+        </sc-if>
       </div>
     </section>
     </sc-if>
@@ -553,7 +571,7 @@
     <div style="max-width:1120px;margin:0 auto;padding:0 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;align-items:flex-start;">
       <div>
         <h4 style="font-family:'Fraunces',serif;font-weight:600;color:#fff;font-size:.95rem;">Un Nuevo Camino</h4>
-        <p style="max-width:32ch;font-size:.82rem;">Un camino católico junto a niños con cáncer, adultos mayores y familias de bajos recursos, inspirado en el amor de Dios.</p>
+        <p style="max-width:32ch;font-size:.82rem;">Un camino de fe junto a niños con cáncer, adultos mayores y familias de bajos recursos, inspirado en el amor de Dios.</p>
       </div>
       <div>
         <h4 style="font-family:'Fraunces',serif;font-weight:600;color:#fff;font-size:.95rem;">Navegación</h4>
@@ -812,6 +830,8 @@ class Component extends DCLogic {
     testimonialDraft: { name: '', role: '', quote: '', detail: '' },
     testimonialDetailId: null,
     isAdmin: false,
+    showDonarDinero: true,
+    showContactoRedes: true,
     freeText: '',
     cultureFactIndex: 0,
     faithCapsuleIndex: 0,
@@ -832,6 +852,14 @@ class Component extends DCLogic {
     try {
       const params = new URLSearchParams(window.location.search);
       if (params.get('admin') === '1') this.setState({ isAdmin: true });
+    } catch (e) {}
+
+    try {
+      const vis = JSON.parse(window.localStorage.getItem('unc_section_visibility') || '{}');
+      this.setState({
+        showDonarDinero: vis.donarDinero !== undefined ? vis.donarDinero : true,
+        showContactoRedes: vis.contactoRedes !== undefined ? vis.contactoRedes : true
+      });
     } catch (e) {}
 
     try {
@@ -857,6 +885,22 @@ class Component extends DCLogic {
     const photos = { ...this.state.activityPhotos, [key]: this.state.activityPhotos[key].filter((_, i) => i !== index) };
     this.setState({ activityPhotos: photos });
     try { window.localStorage.setItem('unc_activity_photos', JSON.stringify(photos)); } catch (e) {}
+  }
+
+  saveVisibility(next) {
+    try { window.localStorage.setItem('unc_section_visibility', JSON.stringify(next)); } catch (e) {}
+  }
+
+  toggleDonarDineroVisibility() {
+    const next = !this.state.showDonarDinero;
+    this.setState({ showDonarDinero: next });
+    this.saveVisibility({ donarDinero: next, contactoRedes: this.state.showContactoRedes });
+  }
+
+  toggleContactoRedesVisibility() {
+    const next = !this.state.showContactoRedes;
+    this.setState({ showContactoRedes: next });
+    this.saveVisibility({ donarDinero: this.state.showDonarDinero, contactoRedes: next });
   }
 
   toggleAdmin() {
@@ -1109,8 +1153,8 @@ class Component extends DCLogic {
       },
       onCloseSeries: () => this.setState({ selectedSeriesKey: null }),
 
-      donatePaneDinero: s.donatePane === 'dinero',
-      donatePaneBienes: s.donatePane === 'bienes',
+      donatePaneDinero: s.donatePane === 'dinero' && (s.showDonarDinero || s.isAdmin),
+      donatePaneBienes: s.donatePane === 'bienes' || !(s.showDonarDinero || s.isAdmin),
       donateDineroBtnStyle,
       donateBienesBtnStyle,
       onDonateDinero: () => this.setState({ donatePane: 'dinero' }),
@@ -1187,7 +1231,17 @@ class Component extends DCLogic {
 
       isAdmin: s.isAdmin,
       adminToggleLabel: s.isAdmin ? 'Salir del modo administrador' : 'Acceso administrador',
-      onToggleAdmin: () => this.toggleAdmin()
+      onToggleAdmin: () => this.toggleAdmin(),
+
+      donarDineroVisibleToPublic: s.showDonarDinero || s.isAdmin,
+      donarDineroStatusLabel: s.showDonarDinero ? 'visible al público' : 'oculto al público',
+      donarDineroToggleActionLabel: s.showDonarDinero ? 'Ocultar' : 'Mostrar',
+      onToggleDonarDineroVisibility: () => this.toggleDonarDineroVisibility(),
+
+      contactoRedesVisibleToPublic: s.showContactoRedes || s.isAdmin,
+      contactoRedesStatusLabel: s.showContactoRedes ? 'visible al público' : 'oculto al público',
+      contactoRedesToggleActionLabel: s.showContactoRedes ? 'Ocultar' : 'Mostrar',
+      onToggleContactoRedesVisibility: () => this.toggleContactoRedesVisibility()
     };
   }
 }
